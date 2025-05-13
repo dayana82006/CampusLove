@@ -17,7 +17,7 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        string connectionString = "server=localhost;database=campus_love;user=campus2023;password=campus2023;";
+        string connectionString = "server=localhost;database=campus_love;user=root;password=root123;";
         bool conexionExitosa = false;
 
         MostrarBarraDeCarga();
