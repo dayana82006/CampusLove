@@ -1,32 +1,50 @@
 using System;
 using MySql.Data.MySqlClient;
 
-namespace MiAppHexagonal.Infrastructure.Mysql;
-
-public class ConexionSingleton
+namespace CampusLove.Infrastructure.MySql
 {
-    private static ConexionSingleton? _instancia;
-    private readonly string _connectionString;
-    private MySqlConnection? _conexion;
-
-    private ConexionSingleton(string connectionString)
+    public class ConexionSingleton
     {
-        _connectionString = connectionString;
-    }
+        private static ConexionSingleton? _instancia;
+        private readonly string _connectionString;
+        private MySqlConnection? _conexion;
 
-    public static ConexionSingleton Instancia(string connectionString)
-    {
-        _instancia ??= new ConexionSingleton(connectionString);
-        return _instancia;
-    }
+        // Constructor privado
+        private ConexionSingleton()
+        {
+            _connectionString = "server=localhost;database=campus_love;user=root;password=root123;";
+        }
 
-    public MySqlConnection ObtenerConexion()
-    {
-        _conexion ??= new MySqlConnection(_connectionString);
+        // Devuelve la instancia única
+        public static ConexionSingleton Instancia
+        {
+            get
+            {
+                _instancia ??= new ConexionSingleton();
+                return _instancia;
+            }
+        }
 
-        if (_conexion.State != System.Data.ConnectionState.Open)
-            _conexion.Open();
+        // Obtiene y abre la conexión si es necesario
+        public MySqlConnection ObtenerConexion()
+        {
+            _conexion ??= new MySqlConnection(_connectionString);
 
-        return _conexion;
+            if (_conexion.State != System.Data.ConnectionState.Open)
+                _conexion.Open();
+
+            return _conexion;
+        }
+
+        // Cierra y limpia la conexión
+        public void CerrarConexion()
+        {
+            if (_conexion is not null && _conexion.State == System.Data.ConnectionState.Open)
+            {
+                _conexion.Close();
+                _conexion.Dispose();
+                _conexion = null;
+            }
+        }
     }
 }
