@@ -2,7 +2,7 @@ using System;
 using CampusLove.Domain.Entities;
 using CampusLove.Domain.Ports;
 namespace CampusLove.Application.Services;
-
+using CampusLove.Utilidades;
 
 public class AuthService
 {
@@ -26,8 +26,8 @@ public class AuthService
              Console.WriteLine("❌ Contraseña incorrecta.");
             return false;
         }
+       
         
-        Console.WriteLine($"✅ Bienvenido, {usuario.Nombre}!");
         return true;
 
     }
