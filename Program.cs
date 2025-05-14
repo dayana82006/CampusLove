@@ -11,7 +11,7 @@ internal class Program
     private static void MostrarBarraDeCarga()
     {
         Console.Write("Cargando: ");
-        for (int i = 0; i <= 15; i++)
+        for (int i = 0; i <= 10; i++)
         {
             Console.Write("｡☁︎ ｡♥ ");
             Thread.Sleep(80);
