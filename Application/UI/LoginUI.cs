@@ -1,8 +1,11 @@
 using System;
 using CampusLove.Application.Services;
 using CampusLove.Domain.Entities;
+using CampusLove;
+using CampusLove.Domain.Ports;
 namespace CampusLove.Application.UI;
-using CampusLove.Utilidades;
+
+using CampusLove.Application.UI;
 
 
 public class LoginUI
@@ -13,7 +16,7 @@ public class LoginUI
         _repo = repo;
     }
 
-     private static void MostrarTitulo()
+    private static void MostrarTitulo()
     {
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Magenta;
@@ -66,7 +69,7 @@ public class LoginUI
     }
     private static string MostrarOpciones()
     {
-        return 
+        return
                "1. Iniciar Sesion\n" +
                "2. Registrarse\n" +
                "0. Salir\n";
@@ -89,7 +92,7 @@ public class LoginUI
                     {
                         Console.Clear();
                         MostrarMenuUsuario();
-                        
+
                     }
                     break;
                 case 2:
@@ -100,7 +103,7 @@ public class LoginUI
                     salir = Utilidades.LeerTecla();
                     Console.Clear();
                     Console.WriteLine("\n👋 Vuelve Pronto ! 👋");
-                
+
                     break;
                 default:
                     Console.WriteLine("⚠️ Opción no valida. ⚠️");
@@ -110,56 +113,55 @@ public class LoginUI
     }
 
 
-        static void MostrarMenuUsuario()
+    static void MostrarMenuUsuario()
+    {
+        bool volverMenuPrincipal = false;
+
+        while (!volverMenuPrincipal)
         {
-            bool volverMenuPrincipal = false;
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("\n\t╔═══════════════════════════════════════╗");
+            Console.WriteLine("\t║ 💗 BIENVENID A LA JERGA DEL AMOR 💗  ║");
+            Console.WriteLine("\t╚═══════════════════════════════════════╝\n");
+            Console.ResetColor();
 
-            while (!volverMenuPrincipal)
+            Console.WriteLine("1. 💗 Mis Likes");
+            Console.WriteLine("2. 👀 Ver Perfiles");
+            Console.WriteLine("3. 💌 Matches");
+            Console.WriteLine("4. 📊 Ver Estadísticas");
+            Console.WriteLine("0. 🚪 Salir");
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("💗 Seleccione una opcion 💗 : ");
+            Console.ResetColor();
+
+            string opcion = Console.ReadLine();
+
+            switch (opcion)
             {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine("\n\t╔═══════════════════════════════════════╗");
-                Console.WriteLine("\t║ 💗 BIENVENID A LA JERGA DEL AMOR 💗  ║");
-                Console.WriteLine("\t╚═══════════════════════════════════════╝\n");
-                Console.ResetColor();
-
-                Console.WriteLine("1. 💗 Mis Likes");
-                Console.WriteLine("2. 👀 Ver Perfiles");
-                Console.WriteLine("3. 💌 Matches");
-                Console.WriteLine("4. 📊 Ver Estadísticas");
-                Console.WriteLine("0. 🚪 Salir");
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.Write("💗 Seleccione una opcion 💗 : ");
-                Console.ResetColor();
-
-                string opcion = Console.ReadLine();
-
-                switch (opcion)
-                {
-                    case "1":
-                       // MostrarMisLikes();
-                        break;
-                    case "2":
-                      //  MostrarPerfiles();
-                        break;
-                    case "3":
-                       // MostrarMatches();
-                        break;
-                    case "4":
-                       // MostrarEstadisticas();
-                        break;
-                    case "0":
-                        volverMenuPrincipal = true;
-                        break;
-                    default:
-                        Console.WriteLine("Opción no válida. Presione cualquier tecla para continuar...");
-                        Console.ReadKey();
-                        break;
-                }
+                case "1":
+                    // MostrarMisLikes();
+                    break;
+                case "2":
+                    //  MostrarPerfiles();
+                    break;
+                case "3":
+                    // MostrarMatches();
+                    break;
+                case "4":
+                    // MostrarEstadisticas();
+                    break;
+                case "0":
+                    volverMenuPrincipal = true;
+                    break;
+                default:
+                    Console.WriteLine("Opción no válida. Presione cualquier tecla para continuar...");
+                    Console.ReadKey();
+                    break;
             }
         }
-
+    }
     private bool IniciarSesion()
     {
         Console.Write("\nIngrese su correo o usuario: ");
@@ -168,7 +170,17 @@ public class LoginUI
         Console.Write("\nIngrese su contraseña: ");
         string clave = LeerContraseniaOculta();
 
-        return _repo.Login(identificador, clave);
+        var resultado = _repo.Login(identificador, clave);
+
+        if (!resultado.Exitoso) return false;
+
+        if (resultado.EsAdmin)
+        {
+            AdminUI.MenuAdmin();
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -195,16 +207,19 @@ public class LoginUI
         Console.Write("ID Género: ");
         nuevo.GeneroId = int.Parse(Console.ReadLine()!);
 
-        Console.Write("ID Carrera: ");
+        Console.Write("Selecciona el ID de tu carrera: ");
         nuevo.CarreraId = int.Parse(Console.ReadLine()!);
 
         Console.Write("ID Dirección: ");
         nuevo.DireccionId = int.Parse(Console.ReadLine()!);
+        Console.Write("Selecciona Tus Interes");
+
 
         Console.Write("Frase de perfil: ");
         nuevo.FrasePerfil = Console.ReadLine()!;
 
         _repo.Registrar(nuevo);
+
     }
 
 

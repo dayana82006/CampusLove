@@ -1,0 +1,69 @@
+using System;
+using CampusLove.Application.Services;
+using CampusLove.Domain.Factory;
+using CampusLove.Domain.Ports;
+using CampusLove.Infrastructure.Repositories;
+using CampusLove.Domain.Entities;
+
+namespace CampusLove.Application.UI.Admin.Paises
+{
+
+    public class UIPais
+    {
+        private readonly PaisService _servicio;
+
+        public UIPais(IDbFactory factory)
+        {
+            _servicio = new PaisService(factory.CrearPaisRepository());
+        }
+
+        public void GestionPaises()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("             ⋆｡‧˚ʚ🍒ɞ˚‧｡⋆");
+                Console.WriteLine("   ⭒❃.✮:▹ Menú de opciones ◃:✮.❃⭒");
+                Console.WriteLine();
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(" ⤜♡→ 1. Ver todos los países 🌍");
+                Console.WriteLine(" ⤜♡→ 2. Agregar un nuevo país ✨");
+                Console.WriteLine(" ⤜♡→ 3. Actualizar información 📋");
+                Console.WriteLine(" ⤜♡→ 4. Eliminar un país 💔");
+                Console.WriteLine(" ⤜♡→ 0. Volver al menú principal ↩️");
+                Console.ResetColor();
+
+                var opcion = Console.ReadLine();
+
+                switch (opcion)
+                {
+                    case "1":
+                        _servicio.MostrarTodos();
+                        break;
+                    case "2":
+                        var crear = new CrearPais(_servicio);
+                        crear.Ejecutar();
+                        break;
+                    case "3":
+                        var actualizar = new ActualizarPais(_servicio);
+                        actualizar.Ejecutar();
+                        break;
+                    case "4":
+                        var eliminar = new EliminarPais(_servicio);
+                        eliminar.Ejecutar();
+                        break;
+                    case "0":
+                        return;
+                    default:
+                        Console.WriteLine("❌ Opción no válida.");
+                        break;
+                }
+
+                Console.WriteLine("\nPresiona una tecla para continuar...");
+                Console.ReadKey();
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
-namespace CampusLove.Utilidades;
+namespace CampusLove;
+
 
 public class Utilidades
 {
@@ -18,7 +19,7 @@ public class Utilidades
                 default:
                     Console.Write("\nTecla no válida. Presione S o N: ");
                     break;
-                    
+
             }
         }
     }
@@ -126,22 +127,22 @@ public class Utilidades
 
         return input;
     }
-
-    public static int LeerEntero(string mensaje)
+public static int LeerEntero(string mensaje)
+{
+    int valor;
+    string input;
+    do
     {
-        int valor;
-        string input;
-        do
+        input = LeerTextoNoVacio(mensaje);
+        if (!int.TryParse(input, out valor))
         {
-            input = LeerTextoNoVacio(mensaje);
-            if (!int.TryParse(input, out valor))
-            {
-                Console.WriteLine("Debe ingresar un número entero válido.");
-            }
-        } while (!int.TryParse(input, out valor));
+            Console.WriteLine("Debe ingresar un número entero válido.");
+        }
+    } while (!int.TryParse(input, out valor));
+    
+    return valor;
+}
 
-        return valor;
-    }
 
     public static double LeerDouble(string mensaje)
     {
@@ -189,23 +190,5 @@ public class Utilidades
 
         return respuesta == "S";
     }
-
-    public static void MostrarMenuInicio()
-{
-    Console.ForegroundColor = ConsoleColor.Magenta;
-    Console.WriteLine("╔══════════════════════════════════════════════════════════╗");
-    Console.WriteLine("    💘  𝓑𝓘𝓔𝓝𝓥𝓔𝓝𝓘𝓓𝓞  𝓐  𝓛𝓐  𝓟𝓤𝓔𝓡𝓣𝓐  𝓓𝓔𝓛 𝓐𝓜𝓞𝓡 💘   ");
-    Console.WriteLine("╚══════════════════════════════════════════════════════════╝");
-
-    Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine("    1. 💖 Mis Likes");
-    Console.WriteLine("    2. 🧑‍❤️‍🧑 Ver Perfiles");
-    Console.WriteLine("    3. 💌 Matches");
-    Console.WriteLine("    4. 📊 Ver Estadísticas");
-    Console.WriteLine("    0. 🚪 Salir");
-
-    Console.ResetColor(); // Restablece color a blanco normal
-}
-
 
 }

@@ -2,8 +2,8 @@ using MySql.Data.MySqlClient;
 using CampusLove.Domain.Entities;
 using CampusLove.Domain.Ports;
 
-namespace CampusLove.Infrastructure.MySql
-{
+namespace CampusLove.Infrastructure.Repositories;
+
     public class ImpUsuarioRepository : IUsuarioRepository
 
     {
@@ -143,4 +143,3 @@ namespace CampusLove.Infrastructure.MySql
             };
         }
     }
-}

@@ -1,3 +1,4 @@
+using CampusLove.Domain.Entities;
 namespace CampusLove.Domain.Entities
 {
     public class Usuario
@@ -14,5 +15,6 @@ namespace CampusLove.Domain.Entities
         public string FrasePerfil { get; set; } = string.Empty;
         public int LikesRecibidos { get; set; }
         public int LikesDisponibles { get; set; }
+         public List<UsuarioIntereses> UsuarioIntereses { get; set; } = new();
     }
 }

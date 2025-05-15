@@ -1,16 +1,29 @@
-using System;
 using CampusLove.Domain.Factory;
+using CampusLove.Domain.Ports;
+using CampusLove.Infrastructure.Repositories;
+using MySql.Data.MySqlClient;
 
-namespace CampusLove.Infrastructure.Mysql;
-
-public class MySqlDbFactory : IDbFactory
+namespace CampusLove.Infrastructure.MySql
 {
-    private readonly string _connectionString;
-
-    public MySqlDbFactory(string connectionString)
+    public class MySqlDbFactory : IDbFactory
     {
-        _connectionString = connectionString;
+        private readonly string _connectionString;
+
+        public MySqlDbFactory(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
+        public IUsuarioRepository CrearUsuarioRepository()
+        {
+            var conexion = new MySqlConnection(_connectionString);
+
+            return new ImpUsuarioRepository(conexion);
+        }
+        public IPaisRepository CrearPaisRepository()
+        {
+            return new ImpPaisRepository(_connectionString);
+        }
+       
     }
-
 }
-
