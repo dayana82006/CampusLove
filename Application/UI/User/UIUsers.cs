@@ -34,15 +34,11 @@ namespace CampusLove.Application.UI.User
 {
     Console.Clear();
     Console.ForegroundColor = ConsoleColor.Magenta;
-    Console.WriteLine("\n\t╔══════════════════════════════════════════════════════╗");
-    Console.WriteLine("\t║           💗 BIENVENID@ A LA JERGA DEL AMOR 💗       ║");
-    Console.WriteLine("\t╚══════════════════════════════════════════════════════╝");
-    Console.ResetColor();
-
-    Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine("\t(¯`·.¸¸.·´¯`.¸¸.-> ✧˚･ﾟ: *✧:ﾟ･ﾟ:* LOVE ZONE *:･ﾟ✧*:ﾟ･ﾟ:˚ <-.·´¯`·.¸¸.·´¯)");
     Console.ResetColor();
 
+
+    Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine($"\n\t👤 Usuario: {_usuario.first_name} {_usuario.last_name}");
     Console.WriteLine($"\t🎁 Créditos disponibles hoy: _usuario.credits");
     Console.WriteLine("\n\t════════════════════════════════════════════════════════");

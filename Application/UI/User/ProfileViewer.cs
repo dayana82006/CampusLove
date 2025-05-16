@@ -138,7 +138,7 @@ namespace CampusLove.Application.UI.User
             string interestsList = string.Join(Environment.NewLine, interests.Select(i => "                        - " + i));
 
             Console.InputEncoding = System.Text.Encoding.UTF8;
-          Console.Clear();
+        Console.Clear();
           Console.WriteLine($@"
                 ╔══════════════════════════════════════════════════════════════════╗
                 ║     ♥♥♥ BIENVENID@ A TU PERFIL ROMÁNTICO PERSONALIZADO ♥♥♥     ║
@@ -162,7 +162,7 @@ namespace CampusLove.Application.UI.User
 
                 ⊹⊱✿⊰⊹ Intereses del Corazón ⊹⊱✿⊰⊹
 
-                {interestsList}
+                    {interestsList}
 
                 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
