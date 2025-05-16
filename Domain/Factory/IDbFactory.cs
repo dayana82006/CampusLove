@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using CampusLove.Application.Services;
 using CampusLove.Domain.Entities;
-using CampusLove.Domain.Ports;
-namespace CampusLove.Domain.Factory
+
+namespace CampusLove.Domain.Interfaces
 {
     public interface IDbFactory
     {
-        IUsuarioRepository CrearUsuarioRepository();
-        IPaisRepository CrearPaisRepository();
+        ICountryRepository CreateCountryRepository();
         
+        IUsersRepository CreateUsersRepository();
+        IAddressesRepository CreateAddressesRepository();
+        ICareersRepository CreateCareersRepository();
+        IGendersRepository CreateGendersRepository();
+   
     }
-}
+} 
