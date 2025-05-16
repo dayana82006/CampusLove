@@ -36,11 +36,11 @@ INSERT INTO Interests (interest_name, id_category) VALUES
 
 -- Users
 INSERT INTO Users (
-    first_name, last_name, email, password, age, id_gender, id_career, id_address, profile_phrase
+    first_name, last_name, email, password, birth_date, id_gender, id_career, id_address, profile_phrase
 ) VALUES 
-('Carlos', 'Ramírez', 'Carlos123@gmail.com', 'pass123', '20', 1, 1, 1, 'Apasionado por la tecnología.'),
-('María', 'Gómez', 'Maria456@gmail.com', 'pass123', '25', 2, 1, 2, 'Me encanta programar y jugar videojuegos.'),
-('Alex', 'Pérez', 'Alex789@gmail.com', 'pass123', '29', 3, 1, 3, 'Fanático del ciclismo y los deportes.');
+('Carlos', 'Ramírez', 'Carlos123@gmail.com', 'pass123', '2000-05-20', 1, 1, 1, 'Apasionado por la tecnología.'),
+('María', 'Gómez', 'Maria456@gmail.com', 'pass123', '2001-03-15', 2, 1, 2, 'Me encanta programar y jugar videojuegos.'),
+('Alex', 'Pérez', 'Alex789@gmail.com', 'pass123', '1999-11-10', 3, 1, 3, 'Fanático del ciclismo y los deportes.');
 
 -- UsersInterests
 INSERT INTO UsersInterests (id_user, id_interest) VALUES

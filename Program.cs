@@ -36,24 +36,33 @@ internal class Program
             var creditsRepo = factory.CreateInteractionCreditsRepository();
             var interactionsRepo = factory.CreateInteractionsRepository();
             var matchesRepo = factory.CreateMatchesRepository();
+            var interestsRepo = factory.CreateInterestsRepository();
+            var usersInterestsRepo = factory.CreateUsersInterestsRepository();
 
+            var careersService = new CareersService(careerRepo);
+            var addressesService = new AddressesService(addressRepo, connStr);
+            var interactionsService = new InteractionsService(interactionsRepo);
+            var interestsService = new InterestsService(interestsRepo, connStr);
+            var usersInterestsService = new UsersInterestsService(usersInterestsRepo);
             var authService = new AuthService(userRepo);
             var userService = new UserService(userRepo, creditsRepo, interactionsRepo, matchesRepo);
-
             var genderService = new GendersService(genderRepo);
-            var careerService = new CareersService(careerRepo);
-            var addressService = new AddressesService(addressRepo, connStr);
 
-            
-            var loginUI = new LoginUI(authService, userService, genderService, careerService, addressService);
+
+
+            var loginUI = new LoginUI(
+                authService,
+                 userService,
+                 interestsService,
+                 usersInterestsService,
+                genderService,
+                   careersService,
+                     addressesService
+
+            );
             loginUI.MostrarMenu();
 
 
-
-            // Servicios adicionales listos para usar en otras partes
-            // var genderService = new GendersService(factory.CreateGendersRepository());
-            // var careerService = new CareersService(factory.CreateCareersRepository());
-            // var addressService = new AddressesService(factory.CreateAddressesRepository());
         }
         catch (Exception ex)
         {

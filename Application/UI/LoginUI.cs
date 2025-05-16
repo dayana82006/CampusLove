@@ -1,9 +1,11 @@
 using System;
 using CampusLove.Application.Services;
+
 using CampusLove.Domain.Entities;
 using CampusLove.Domain.Interfaces;
 using CampusLove.Infrastructure.Factories;
 using CampusLove.Domain.Ports;
+using CampusLove.Application.UI.User;
 
 namespace CampusLove.Application.UI
 {
@@ -33,6 +35,10 @@ namespace CampusLove.Application.UI
             _genderService = genderService;
             _careerService = careerService;
             _addressService = addressService;
+        }
+
+        public LoginUI()
+        {
         }
 
         // Título estilizado
@@ -110,11 +116,7 @@ namespace CampusLove.Application.UI
                 switch (opcion)
                 {
                     case 1:
-                        if (IniciarSesion())
-                        {
-                            Console.Clear();
-                            MostrarMenuUsuario();
-                        }
+                      IniciarSesion();
                         break;
                     case 2:
                         Console.Clear();
@@ -135,91 +137,62 @@ namespace CampusLove.Application.UI
             }
         }
 
-        // Menú para usuarios ya autenticados
-        private static void MostrarMenuUsuario()
-        {
-            bool volverMenuPrincipal = false;
-
-            while (!volverMenuPrincipal)
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine("\n\t╔═══════════════════════════════════════╗");
-                Console.WriteLine("\t║ 💗 BIENVENID A LA JERGA DEL AMOR 💗  ║");
-                Console.WriteLine("\t╚═══════════════════════════════════════╝\n");
-                Console.ResetColor();
-
-                Console.WriteLine("1. 💗 Mis Likes");
-                Console.WriteLine("2. 👀 Ver Perfiles");
-                Console.WriteLine("3. 💌 Matches");
-                Console.WriteLine("4. 📊 Ver Estadísticas");
-                Console.WriteLine("0. 🚪 Salir\n");
-
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.Write("💗 Seleccione una opción 💗 : ");
-                Console.ResetColor();
-
-                string? opcion = Console.ReadLine();
-
-                switch (opcion)
-                {
-                    case "1":
-                        // TODO: Implementar MostrarMisLikes();
-                        break;
-                    case "2":
-                        // TODO: Implementar MostrarPerfiles();
-                        break;
-                    case "3":
-                        // TODO: Implementar MostrarMatches();
-                        break;
-                    case "4":
-                        // TODO: Implementar MostrarEstadisticas();
-                        break;
-                    case "0":
-                        volverMenuPrincipal = true;
-                        break;
-                    default:
-                        Console.WriteLine("Opción no válida. Presione cualquier tecla para continuar...");
-                        Console.ReadKey();
-                        break;
-                }
-            }
-        }
-
         // Lógica para iniciar sesión
         private bool IniciarSesion()
         {
-            Console.Write("\nIngrese su correo o usuario: ");
-            string? identificador = Console.ReadLine();
+            
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("💗 INICIO DE SESIÓN 💗\n");
+            Console.ResetColor();
 
-            if (string.IsNullOrWhiteSpace(identificador))
-            {
-                Console.WriteLine("⚠️ El identificador no puede estar vacío.");
-                Console.ReadKey();
-                return false;
-            }
+            Console.Write("📧 Correo o usuario: ");
+            string userInput = Console.ReadLine() ?? "";
 
-            Console.Write("\nIngrese su contraseña: ");
-            string clave = LeerContraseniaOculta();
+            Console.Write("🔒 Contraseña: ");
+            string password = LeerContraseniaOculta();
 
-            var resultado = _repo.Login(identificador, clave);
+            var resultado = _repo.Login(userInput, password);
 
             if (!resultado.Exitoso)
             {
-                Console.WriteLine("❌ Usuario o contraseña incorrectos. Presione cualquier tecla para intentar de nuevo.");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n❌ Usuario o contraseña incorrectos. Presione cualquier tecla para intentar de nuevo.");
+                Console.ResetColor();
                 Console.ReadKey();
                 return false;
             }
 
             if (resultado.EsAdmin)
             {
-                string connStr = "Host=localhost;Database=db_campuslove;Port=5432;Username=postgres;password=root123;Pooling=true;";
+                string connStr = "Host=localhost;Database=db_campuslove;Port=5432;Username=postgres;Password=root";
                 IDbFactory factory = new NpgsqlDbFactory(connStr);
                 var adminUI = new AdminUI(factory);
                 adminUI.MenuAdmin();
+                return false;
             }
 
-            return true;
+
+            else
+            {
+
+                // Ir al menú de usuario normal
+                var uiUsers = new UIUsers(
+                    _userService,
+                    _userInterestService,
+                    _interestService,
+                    _genderService,
+                    _careerService,
+                    _addressService,
+                    resultado.Usuario
+
+                );
+
+                uiUsers.Ejecutar();
+                return true;
+            }
+
+
         }
     }
 }

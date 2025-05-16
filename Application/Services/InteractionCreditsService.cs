@@ -8,12 +8,12 @@ namespace CampusLove.Application.Services
     public class InteractionCreditsService
     {
         private readonly IInteractionsRepository _interactionsRepository;
-        private readonly IInteractionCreditsRepository _interactionCreditsRepository;
+        private readonly IInteractionsCreditsRepository _interactionCreditsRepository;
         private const int MaxDailyCredits = 10;
 
         public InteractionCreditsService(
             IInteractionsRepository interactionsRepository,
-            IInteractionCreditsRepository interactionCreditsRepository)
+            IInteractionsCreditsRepository interactionCreditsRepository)
         {
             _interactionsRepository = interactionsRepository;
             _interactionCreditsRepository = interactionCreditsRepository;

@@ -8,9 +8,10 @@ namespace CampusLove.Application.Services
     public class AuthService
     {
         private readonly IUsersRepository _repo;
-        private const string ADMIN_USERNAME = "admin";
 
-        private const string ADMIN_PASSWORD = "admin123";
+        // Usuario y hash SHA256 de "admin123"
+        private const string ADMIN_USERNAME = "admin";
+        private const string ADMIN_PASSWORD = "admin123"; 
 
         public AuthService(IUsersRepository repo)
         {
@@ -21,6 +22,7 @@ namespace CampusLove.Application.Services
         {
             public bool Exitoso { get; set; }
             public bool EsAdmin { get; set; }
+            public Users? Usuario { get; set; }
         }
 
         public LoginResultado Login(string user_email, string password)
@@ -34,44 +36,39 @@ namespace CampusLove.Application.Services
             var emailOrUser = user_email.Trim();
             var passwordTrimmed = password.Trim();
 
-            if (EsAdmin(emailOrUser, passwordTrimmed))
+            if (EsAdmin(emailOrUser, password))
             {
                 return new LoginResultado { Exitoso = true, EsAdmin = true };
             }
-            var user = _repo.GetByEmail(emailOrUser);
-            if (user == null)
-            {
-                user = _repo.GetByUser(emailOrUser);
-            }
+
+            var user = _repo.GetByEmail(emailOrUser) ?? _repo.GetByUser(emailOrUser);
 
             if (user == null)
             {
-                Console.WriteLine("❌ Usuario no encontrado.");
                 return new LoginResultado { Exitoso = false };
             }
 
-
-            var hashedInputPassword = HashPassword(passwordTrimmed);
-            if (user.password != hashedInputPassword)
+           
+            if (user.password != password)
             {
-                Console.WriteLine("❌ Contraseña incorrecta.");
                 return new LoginResultado { Exitoso = false };
             }
 
-            return new LoginResultado { Exitoso = true, EsAdmin = false };
+            return new LoginResultado { Exitoso = true, EsAdmin = false, Usuario = user };
         }
 
         public bool EsAdmin(string user, string password)
         {
-            return user.Trim().ToLower() == ADMIN_USERNAME && password == ADMIN_PASSWORD;
+            //var hashed = HashPassword(password);
+            return user.Trim().ToLower() == ADMIN_USERNAME &&  password == ADMIN_PASSWORD;
         }
 
-        private static string HashPassword(string password)
+       /* private static string HashPassword(string password)
         {
             using var sha256 = SHA256.Create();
             var bytes = Encoding.UTF8.GetBytes(password);
             var hash = sha256.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
-        }
+        }*/
     }
 }

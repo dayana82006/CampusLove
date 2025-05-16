@@ -30,82 +30,101 @@ namespace CampusLove.Application.UI.User
             _addressesService = addressesService;
             _usuario = usuario;
         }
+       public string InitialMenu()
+{
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    Console.WriteLine("\n\t╔══════════════════════════════════════════════════════╗");
+    Console.WriteLine("\t║           💗 BIENVENID@ A LA JERGA DEL AMOR 💗       ║");
+    Console.WriteLine("\t╚══════════════════════════════════════════════════════╝");
+    Console.ResetColor();
 
-        public string InitialMenu()
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("\t(¯`·.¸¸.·´¯`.¸¸.-> ✧˚･ﾟ: *✧:ﾟ･ﾟ:* LOVE ZONE *:･ﾟ✧*:ﾟ･ﾟ:˚ <-.·´¯`·.¸¸.·´¯)");
+    Console.ResetColor();
+
+    Console.WriteLine($"\n\t👤 Usuario: {_usuario.first_name} {_usuario.last_name}");
+    Console.WriteLine($"\t🎁 Créditos disponibles hoy: _usuario.credits");
+    Console.WriteLine("\n\t════════════════════════════════════════════════════════");
+
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine("\t1. 👀 Ver Perfiles y Dar Like o Dislike");
+    Console.WriteLine("\t2. 💌 Ver Mis Coincidencias (Matches)");
+    Console.WriteLine("\t3. 📊 Ver Estadísticas del Sistema");
+    Console.WriteLine("\t4. 🙋‍♂️ Ver Mi Perfil");
+    Console.WriteLine("\t0. 🚪 Cerrar Sesión");
+    Console.ResetColor();
+
+    Console.WriteLine("\t════════════════════════════════════════════════════════\n");
+
+    // 💫 Detalle decorativo sutil y tierno
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("\t˚₊‧꒰ა ⊹ ୨୧ ¡Recuerda sonreír, Cupido nunca descansa! ୨୧ ⊹ ꒱‧₊˚");
+    Console.ResetColor();
+
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    Console.Write("\n💗 Seleccione una opción 💗: ");
+    Console.ResetColor();
+
+    return "";
+}
+
+
+
+        public void Ejecutar()
         {
-            Console.Clear();
-            return @$"
-                ♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥
-                    ███████████████████████████████████████████████████████████████████
-                    ███─▄▄▄─██▀▄─██▄─▀█▀─▄█▄─▄▄─█▄─██─▄█─▄▄▄▄█▄─▄███─▄▄─█▄─█─▄█▄─▄▄─███
-                    ███─███▀██─▀─███─█▄█─███─▄▄▄██─██─██▄▄▄▄─██─██▀█─██─██▄▀▄███─▄█▀███
-                    ▀▀▀▄▄▄▄▄▀▄▄▀▄▄▀▄▄▄▀▄▄▄▀▄▄▄▀▀▀▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▀▀▀▄▀▀▀▄▄▄▄▄▀▀▀
-                                              
-                            Bienvenido, {_usuario.first_name} {_usuario.last_name}!  
-                            Créditos disponibles hoy: _usuario.credits
-                            
-                            1. Ver perfiles y dar Like o Dislike      
-                            2. Ver mis coincidencias (Matches)        
-                            3. Ver estadísticas del sistema           
-                            4. Ver mi perfil                          
-                            0. Cerrar sesión    
-                ♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥";
-        }
-
-            public void Ejecutar()
-    {
-        while (true)
-        {
-            Console.Clear();
-            Console.WriteLine(InitialMenu());
-            Console.Write("Seleccione una opción: ");
-            var input = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(input)) continue;
-
-            switch (input)
+            while (true)
             {
-                case "1":
                 Console.Clear();
-                    var viewer = new ProfileViewer(
-                        _userService,
-                        _usersInterestsService,
-                        _interestsService,
-                        _gendersService,
-                        _careersService,
-                        _addressesService,
-                        _usuario);
-                    viewer.BrowseProfiles();
-                    break;
-                case "2":
-                    Console.WriteLine("Funcionalidad para ver mis coincidencias.");
-                    break;
-                case "3":
-                    Console.WriteLine("Funcionalidad para ver estadísticas.");
-                    break;
-                case "4":
-                Console.Clear();
-                    var viewProfile = new ViewMyProfile(
-                        _userService,
-                        _usersInterestsService,
-                        _interestsService,
-                        _gendersService,
-                        _careersService,
-                        _addressesService,
-                        _usuario);
-                    Console.WriteLine(viewProfile.GetMyProfileString());
-                    break;
-                case "0":
-                    return;
-                default:
-                    Console.WriteLine("Opción no válida.");
-                    break;
-            }
+                Console.WriteLine(InitialMenu());
+                Console.Write("Seleccione una opción: ");
+                var input = Console.ReadLine();
 
-            Console.WriteLine("Presione cualquier tecla para continuar...");
-            Console.ReadKey();
+                if (string.IsNullOrWhiteSpace(input)) continue;
+
+                switch (input)
+                {
+                    case "1":
+                        Console.Clear();
+                        var viewer = new ProfileViewer(
+                            _userService,
+                            _usersInterestsService,
+                            _interestsService,
+                            _gendersService,
+                            _careersService,
+                            _addressesService,
+                            _usuario);
+                        viewer.BrowseProfiles();
+                        break;
+                    case "2":
+                        Console.WriteLine("Funcionalidad para ver mis coincidencias.");
+                        break;
+                    case "3":
+                        Console.WriteLine("Funcionalidad para ver estadísticas.");
+                        break;
+                    case "4":
+                        Console.Clear();
+                        var viewProfile = new ViewMyProfile(
+                            _userService,
+                            _usersInterestsService,
+                            _interestsService,
+                            _gendersService,
+                            _careersService,
+                            _addressesService,
+                            _usuario);
+                        Console.WriteLine(viewProfile.GetMyProfileString());
+                        break;
+                    case "0":
+                        return;
+                    default:
+                        Console.WriteLine("Opción no válida.");
+                        break;
+                }
+
+                Console.WriteLine("Presione cualquier tecla para continuar...");
+                Console.ReadKey();
+            }
         }
     }
-}
 
 }

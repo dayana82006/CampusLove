@@ -38,7 +38,8 @@ namespace CampusLove.Infrastructure.Factories
         public IUsersInterestsRepository CreateUsersInterestsRepository()
         {
             return new PgsqlUsersInterestsRepository(_connectionString);
-        }        public IInteractionCreditsRepository CreateInteractionCreditsRepository()
+        }
+        public IInteractionCreditsRepository CreateInteractionCreditsRepository()
         {
             return new PgsqlInteractionCreditsRepository(_connectionString);
         }
@@ -49,7 +50,9 @@ namespace CampusLove.Infrastructure.Factories
 
         public IInteractionsRepository CreateInteractionsRepository()
         {
-            throw new NotImplementedException();
+            return new PgsqlInteractionsRepository(_connectionString);
         }
     }
+
+    
 }

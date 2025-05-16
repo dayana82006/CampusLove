@@ -8,6 +8,7 @@ namespace CampusLove.Domain.Interfaces
         IEnumerable<Interactions> GetAll();
         IEnumerable<Interactions> GetByUserId(int userId);
         IEnumerable<Interactions> GetByDate(DateTime date);
+        void Update(Interactions interaction); 
         bool HasInteractedWith(int userId, int targetUserId);
 
         bool Exists(int userId, int targetUserId);

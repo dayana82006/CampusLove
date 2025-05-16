@@ -17,6 +17,32 @@ namespace CampusLove.Application.Services
 
         public void RegisterInteraction(int userId, int targetUserId, string interactionType)
         {
+            var existingInteraction = _interactionsRepository
+                .GetAll()
+                .FirstOrDefault(i => i.id_user_origin == userId && i.id_user_target == targetUserId);
+
+            if (existingInteraction != null)
+            {
+                if (existingInteraction.interaction_type == "like" && interactionType == "like")
+                {
+                    Console.WriteLine("⚠️ Ya le diste like a este usuario. No se descontarán créditos.");
+                    return; 
+                }
+                else if (interactionType == "dislike")
+                {
+                    existingInteraction.interaction_type = "dislike";
+                    existingInteraction.interaction_date = DateTime.Today;
+                    _interactionsRepository.Update(existingInteraction);
+                    Console.WriteLine("🔁 Has cambiado tu interacción a 'dislike'.");
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("⚠️ Ya existe una interacción con este usuario.");
+                    return;
+                }
+            }
+
             var interaction = new Interactions
             {
                 id_user_origin = userId,

@@ -13,6 +13,7 @@ namespace CampusLove.Application.UI.User
         private readonly AddressesService _addressService;
         private readonly InterestsService _interestsService;
         private readonly UsersInterestsService _usersInterestsService;
+        private UserService userService;
 
         public CreateUser(UserService servicio, GendersService genderService, CareersService careerService,
                          AddressesService addressService, InterestsService interestsService,
@@ -24,6 +25,14 @@ namespace CampusLove.Application.UI.User
             _addressService = addressService;
             _interestsService = interestsService;
             _usersInterestsService = usersInterestsService;
+        }
+
+        public CreateUser(UserService userService, GendersService genderService, CareersService careerService, AddressesService addressService)
+        {
+            this.userService = userService;
+            _genderService = genderService;
+            _careerService = careerService;
+            _addressService = addressService;
         }
 
         public void Ejecutar()
