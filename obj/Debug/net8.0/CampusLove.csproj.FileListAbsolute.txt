@@ -81,3 +81,6 @@ C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\obj\Debug\net8.0\Camp
 C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\obj\Debug\net8.0\CampusLove.genruntimeconfig.cache
 C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\obj\Debug\net8.0\ref\CampusLove.dll
 C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\bin\Debug\net8.0\Dapper.dll
+C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\bin\Debug\net8.0\Npgsql.dll

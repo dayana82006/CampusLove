@@ -7,15 +7,14 @@ using System.Collections.Generic;
 
 namespace CampusLove.Infrastructure.Repositories;
 
-public class ImpPaisRepository : IGenericRepository<Pais>, IPaisRepository
+public class ImpPaisRepository : IGenericRepository<Pais>, ICountryRepository
 {
-    private readonly ConexionSingleton _conexion;
+        private readonly string _connectionString;
 
-    public ImpPaisRepository(string conexion)
-    {
-        _conexion = ConexionSingleton.Instancia(conexion);
-    }
-
+        public PgsqlUsersRepository(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
     public List<Pais> ObtenerTodos()
     {
         var pais = new List<Pais>();

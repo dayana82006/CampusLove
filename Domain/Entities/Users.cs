@@ -7,7 +7,7 @@ namespace CampusLove.Domain.Entities
         public string last_name { get; set; } = string.Empty;
         public string email { get; set; } = string.Empty;
         public string password { get; set; } = string.Empty;
-        public int age { get; set; }
+        public DateTime birth_date { get; set; }
         public int id_gender { get; set; }
         public int id_career { get; set; }
         public int id_address { get; set; }

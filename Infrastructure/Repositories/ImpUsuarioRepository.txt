@@ -13,39 +13,6 @@ namespace CampusLove.Infrastructure.Repositories;
         {
             _conexion = conexion;
         }
-        public Usuario? ObtenerPorEmail(string email)
-        {
-            string query = "SELECT * FROM usuario WHERE email = @email";
-
-            using var cmd = new MySqlCommand(query, _conexion);
-            cmd.Parameters.AddWithValue("@email", email);
-
-            using var reader = cmd.ExecuteReader();
-
-            if (reader.Read())
-            {
-                return MapUsuario(reader);
-            }
-
-            return null;
-        }
-
-        public Usuario? ObtenerPorUsuario(string username)
-        {
-            string query = "SELECT * FROM usuario WHERE usuario_name = @username";
-
-            using var cmd = new MySqlCommand(query, _conexion);
-            cmd.Parameters.AddWithValue("@username", username);
-
-            using var reader = cmd.ExecuteReader();
-
-            if (reader.Read())
-            {
-                return MapUsuario(reader);
-            }
-
-            return null;
-        }
         public IEnumerable<Usuario> ObtenerTodos()
         {
             var lista = new List<Usuario>();
@@ -124,22 +91,6 @@ namespace CampusLove.Infrastructure.Repositories;
             cmd.ExecuteNonQuery();
         }
 
-        private Usuario MapUsuario(MySqlDataReader reader)
-        {
-            return new Usuario
-            {
-                Id = Convert.ToInt32(reader["id"]),
-                Nombre = reader["nombre"].ToString()!,
-                Email = reader["email"].ToString()!,
-                Clave = reader["clave"].ToString()!,
-                UsuarioName = reader["usuario_name"].ToString()!,
-                Edad = Convert.ToInt32(reader["edad"]),
-                GeneroId = Convert.ToInt32(reader["genero_id"]),
-                CarreraId = Convert.ToInt32(reader["carrera_id"]),
-                DireccionId = Convert.ToInt32(reader["direccion_id"]),
-                FrasePerfil = reader["frase_perfil"].ToString()!,
-                LikesRecibidos = Convert.ToInt32(reader["likes_recibidos"]),
-                LikesDisponibles = Convert.ToInt32(reader["likes_disponibles"]),
-            };
+
         }
-    }
+    

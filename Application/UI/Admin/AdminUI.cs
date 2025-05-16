@@ -1,20 +1,17 @@
-using System;
-using MySql.Data.MySqlClient;
-using CampusLove.Application.Services;
-using CampusLove.Application.UI.Admin.Paises;
 using CampusLove.Domain.Interfaces;
-
 
 namespace CampusLove.Application.UI
 {
     public class AdminUI
     {
-        private readonly AuthService _repo;
+        private readonly IDbFactory _factory;
+        private IDbFactory factory;
 
-        public AdminUI(AuthService repo)
+        public AdminUI(IDbFactory factory)
         {
-            _repo = repo;
+            _factory = factory;
         }
+
 
         public static string Menu()
         {
@@ -29,7 +26,7 @@ namespace CampusLove.Application.UI
                    "0. 🚪 Salir\n";
         }
 
-        public static void MenuAdmin()
+        public void MenuAdmin()
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Magenta;
@@ -40,11 +37,6 @@ namespace CampusLove.Application.UI
             Console.ResetColor();
 
             bool salir = false;
-
-            // Conexión centralizada
-            var connectionString = "server=localhost;user=root;password=root123;database=campus_love;";
-            IDbFactory factory = new MySqlDbFactory(connectionString);
-            var uiPais = new UIPais(factory);
 
             while (!salir)
             {
@@ -70,7 +62,8 @@ namespace CampusLove.Application.UI
                         // TODO: Manejo Ciudad
                         break;
                     case 6:
-                        uiPais.GestionPaises();
+                        // var uiCountry = new UIPais(_factory.CreateCountryRepository());
+                        // uiCountry.GestionPaises();
                         break;
                     case 7:
                         // TODO: Manejo Región
@@ -92,16 +85,6 @@ namespace CampusLove.Application.UI
                         break;
                 }
             }
-        }
-    }
-
-    internal class MySqlDbFactory
-    {
-        private string connectionString;
-
-        public MySqlDbFactory(string connectionString)
-        {
-            this.connectionString = connectionString;
         }
     }
 }

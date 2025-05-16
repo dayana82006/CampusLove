@@ -13,6 +13,7 @@ namespace CampusLove.Application.UI.Admin.Paises
     {
         private readonly PaisService _servicio;
         private IDbFactory factory;
+        private ICountryRepository countryRepository;
 
         public UIPais(IDbFactory factory)
         {
@@ -22,6 +23,11 @@ namespace CampusLove.Application.UI.Admin.Paises
         public UIPais(IDbFactory factory)
         {
             this.factory = factory;
+        }
+
+        public UIPais(ICountryRepository countryRepository)
+        {
+            this.countryRepository = countryRepository;
         }
 
         public void GestionPaises()

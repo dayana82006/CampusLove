@@ -1,9 +1,7 @@
-using System;
 using System.Security.Cryptography;
 using System.Text;
 using CampusLove.Domain.Entities;
 using CampusLove.Domain.Interfaces;
-using CampusLove.Domain.Ports;
 
 namespace CampusLove.Application.Services
 {
@@ -11,6 +9,7 @@ namespace CampusLove.Application.Services
     {
         private readonly IUsersRepository _repo;
         private const string ADMIN_USERNAME = "admin";
+
         private const string ADMIN_PASSWORD = "admin123";
 
         public AuthService(IUsersRepository repo)
@@ -39,13 +38,18 @@ namespace CampusLove.Application.Services
             {
                 return new LoginResultado { Exitoso = true, EsAdmin = true };
             }
+            var user = _repo.GetByEmail(emailOrUser);
+            if (user == null)
+            {
+                user = _repo.GetByUser(emailOrUser);
+            }
 
-            var user = _repo.GetByEmail(emailOrUser) ?? _repo.GetByUser(emailOrUser);
             if (user == null)
             {
                 Console.WriteLine("❌ Usuario no encontrado.");
                 return new LoginResultado { Exitoso = false };
             }
+
 
             var hashedInputPassword = HashPassword(passwordTrimmed);
             if (user.password != hashedInputPassword)
@@ -57,48 +61,12 @@ namespace CampusLove.Application.Services
             return new LoginResultado { Exitoso = true, EsAdmin = false };
         }
 
-        public bool Registrar(User nuevoUsuario)
-        {
-            if (nuevoUsuario.age < 16)
-            {
-                Console.WriteLine("🚫 Debes tener al menos 16 años para registrarte.");
-                return false;
-            }
-
-            var usernameLower = nuevoUsuario.UsuarioName.Trim().ToLower();
-            var emailLower = nuevoUsuario.email.Trim().ToLower();
-
-            if (usernameLower == ADMIN_USERNAME || emailLower == ADMIN_USERNAME)
-            {
-                Console.WriteLine("🚫 No puedes registrarte como administrador.");
-                return false;
-            }
-
-            try
-            {
-                nuevoUsuario.password = HashPassword(nuevoUsuario.password.Trim());
-                _repo.Create(nuevoUsuario);
-                Console.WriteLine("✅ Registro exitoso.");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("❌ Error al registrar: " + ex.Message);
-                return false;
-            }
-        }
-
-        private object HashPassword(object value)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool EsAdmin(string user, string password)
         {
             return user.Trim().ToLower() == ADMIN_USERNAME && password == ADMIN_PASSWORD;
         }
 
-        public static string HashPassword(string password)
+        private static string HashPassword(string password)
         {
             using var sha256 = SHA256.Create();
             var bytes = Encoding.UTF8.GetBytes(password);

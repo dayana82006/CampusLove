@@ -1,4 +1,7 @@
-namespace CampusLove.Domain.Interfaces
+using CampusLove.Domain.Interfaces;   // Interfaz IDbFactory y repositorios
+using CampusLove.Infrastructure.Repositories;  // Implementaciones Pgsql*
+
+namespace CampusLove.Infrastructure.Factories
 {
     public class NpgsqlDbFactory : IDbFactory
     {
@@ -27,6 +30,26 @@ namespace CampusLove.Domain.Interfaces
         public IAddressesRepository CreateAddressesRepository()
         {
             return new PgsqlAddressesRepository(_connectionString);
+        }
+        public IInterestsRepository CreateInterestsRepository()
+        {
+            return new PgsqlInterestsRepository(_connectionString);
+        }
+        public IUsersInterestsRepository CreateUsersInterestsRepository()
+        {
+            return new PgsqlUsersInterestsRepository(_connectionString);
+        }        public IInteractionCreditsRepository CreateInteractionCreditsRepository()
+        {
+            return new PgsqlInteractionCreditsRepository(_connectionString);
+        }
+        public IMatchesRepository CreateMatchesRepository()
+        {
+            return new PgsqlMatchesRepository(_connectionString);
+        }
+
+        public IInteractionsRepository CreateInteractionsRepository()
+        {
+            throw new NotImplementedException();
         }
     }
 }

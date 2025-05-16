@@ -1,9 +1,11 @@
 ﻿﻿using System;
-using MySql.Data.MySqlClient;
+using System.Data;
+using System.Threading;
+using Npgsql;
 using CampusLove.Application.Services;
 using CampusLove.Domain.Interfaces;
 using CampusLove.Application.UI;
-using Npgsql;
+using CampusLove.Infrastructure.Factories;
 
 internal class Program
 {
@@ -20,39 +22,42 @@ internal class Program
 
     private static void Main(string[] args)
     {
-
         string connStr = "Host=localhost;Database=db_campuslove;Port=5432;Username=postgres;password=root123;Pooling=true;";
         IDbFactory factory = new NpgsqlDbFactory(connStr);
 
-        var userService = new UserService(factory.CreateUsersRepository());
-        var genderService = new GendersService(factory.CreateGendersRepository());
-        var careerService = new CareersService(factory.CreateCareersRepository());
-        var addressService = new AddressesService(factory.CreateAddressesRepository());
         MostrarBarraDeCarga();
 
-        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        try
         {
-            try
-            {
-                connection.Open();
+            var genderRepo = factory.CreateGendersRepository();
+            var careerRepo = factory.CreateCareersRepository();
+            var addressRepo = factory.CreateAddressesRepository();
+            var userRepo = factory.CreateUsersRepository();
+            var creditsRepo = factory.CreateInteractionCreditsRepository();
+            var interactionsRepo = factory.CreateInteractionsRepository();
+            var matchesRepo = factory.CreateMatchesRepository();
 
-                // Usar la factory para obtener el repositorio
-                var usuarioRepo = factory.CrearUsuarioRepository();
+            var authService = new AuthService(userRepo);
+            var userService = new UserService(userRepo, creditsRepo, interactionsRepo, matchesRepo);
 
-                // Inyectar el repo al servicio
-                var authService = new AuthService(usuarioRepo);
+            var genderService = new GendersService(genderRepo);
+            var careerService = new CareersService(careerRepo);
+            var addressService = new AddressesService(addressRepo, connStr);
 
-                // Crear la UI con el servicio y mostrar menú
-                var loginUI = new LoginUI(authService);
-                loginUI.MostrarMenu();
-                
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("❌ Error al conectar a la base de datos: " + ex.Message);
-            }
+            
+            var loginUI = new LoginUI(authService, userService, genderService, careerService, addressService);
+            loginUI.MostrarMenu();
+
+
+
+            // Servicios adicionales listos para usar en otras partes
+            // var genderService = new GendersService(factory.CreateGendersRepository());
+            // var careerService = new CareersService(factory.CreateCareersRepository());
+            // var addressService = new AddressesService(factory.CreateAddressesRepository());
         }
-
-
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Error al conectar a la base de datos: " + ex.Message);
+        }
     }
 }
