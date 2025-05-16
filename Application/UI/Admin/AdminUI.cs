@@ -1,12 +1,8 @@
 using System;
 using MySql.Data.MySqlClient;
-using CampusLove.Infrastructure.MySql;
-using CampusLove.Domain.Factory;
 using CampusLove.Application.Services;
-using CampusLove.Domain.Ports;
-using CampusLove.Domain.Entities;
-using CampusLove.Infrastructure.Repositories;
 using CampusLove.Application.UI.Admin.Paises;
+using CampusLove.Domain.Interfaces;
 
 
 namespace CampusLove.Application.UI
@@ -96,6 +92,16 @@ namespace CampusLove.Application.UI
                         break;
                 }
             }
+        }
+    }
+
+    internal class MySqlDbFactory
+    {
+        private string connectionString;
+
+        public MySqlDbFactory(string connectionString)
+        {
+            this.connectionString = connectionString;
         }
     }
 }

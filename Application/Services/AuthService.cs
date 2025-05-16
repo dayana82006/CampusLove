@@ -57,16 +57,16 @@ namespace CampusLove.Application.Services
             return new LoginResultado { Exitoso = true, EsAdmin = false };
         }
 
-        public bool Registrar(Usuario nuevoUsuario)
+        public bool Registrar(User nuevoUsuario)
         {
-            if (nuevoUsuario.Edad < 16)
+            if (nuevoUsuario.age < 16)
             {
                 Console.WriteLine("🚫 Debes tener al menos 16 años para registrarte.");
                 return false;
             }
 
             var usernameLower = nuevoUsuario.UsuarioName.Trim().ToLower();
-            var emailLower = nuevoUsuario.Email.Trim().ToLower();
+            var emailLower = nuevoUsuario.email.Trim().ToLower();
 
             if (usernameLower == ADMIN_USERNAME || emailLower == ADMIN_USERNAME)
             {
@@ -86,6 +86,11 @@ namespace CampusLove.Application.Services
                 Console.WriteLine("❌ Error al registrar: " + ex.Message);
                 return false;
             }
+        }
+
+        private object HashPassword(object value)
+        {
+            throw new NotImplementedException();
         }
 
         public bool EsAdmin(string user, string password)

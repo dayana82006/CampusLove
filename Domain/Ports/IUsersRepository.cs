@@ -11,5 +11,6 @@ namespace CampusLove.Domain.Interfaces
         void Delete(int id);
         Users? GetByEmail(string email);
         Usuario? GetByUser(string username);
+        void Create(Usuario nuevoUsuario);
     }
 }

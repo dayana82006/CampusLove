@@ -4,6 +4,7 @@ using CampusLove.Domain.Factory;
 using CampusLove.Domain.Ports;
 using CampusLove.Infrastructure.Repositories;
 using CampusLove.Domain.Entities;
+using CampusLove.Domain.Interfaces;
 
 namespace CampusLove.Application.UI.Admin.Paises
 {
@@ -11,10 +12,16 @@ namespace CampusLove.Application.UI.Admin.Paises
     public class UIPais
     {
         private readonly PaisService _servicio;
+        private IDbFactory factory;
 
         public UIPais(IDbFactory factory)
         {
             _servicio = new PaisService(factory.CrearPaisRepository());
+        }
+
+        public UIPais(IDbFactory factory)
+        {
+            this.factory = factory;
         }
 
         public void GestionPaises()

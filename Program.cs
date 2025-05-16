@@ -3,6 +3,8 @@ using MySql.Data.MySqlClient;
 using CampusLove.Application.Services;
 using CampusLove.Domain.Interfaces;
 using CampusLove.Application.UI;
+using Npgsql;
+
 internal class Program
 {
     private static void MostrarBarraDeCarga()
