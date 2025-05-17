@@ -9,14 +9,14 @@ namespace CampusLove.Application.Services
     public class UserService
     {
         private readonly IUsersRepository _repository;
-        private readonly IInteractionCreditsRepository _creditsRepo;
+        private readonly IInteractionsCreditsRepository _creditsRepo;
         private readonly IInteractionsRepository _interactionsRepo;
         private readonly IMatchesRepository _matchesRepo;
         private IUsersRepository userRepo;
 
         public UserService(
             IUsersRepository repository,
-            IInteractionCreditsRepository creditsRepo,
+            IInteractionsCreditsRepository creditsRepo,
             IInteractionsRepository interactionsRepo,
             IMatchesRepository matchesRepo)
         {

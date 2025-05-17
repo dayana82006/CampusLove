@@ -83,7 +83,7 @@ namespace CampusLove.Application.UI.User
     [P] Anterior
     [S] Salir
 ");
-                var option = Console.ReadLine()?.Trim().ToUpper();
+ var option = Console.ReadLine()?.Trim().ToUpper();
 
                 switch (option)
                 {

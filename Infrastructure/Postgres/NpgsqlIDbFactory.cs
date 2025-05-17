@@ -39,7 +39,7 @@ namespace CampusLove.Infrastructure.Factories
         {
             return new PgsqlUsersInterestsRepository(_connectionString);
         }
-        public IInteractionCreditsRepository CreateInteractionCreditsRepository()
+        public IInteractionsCreditsRepository CreateInteractionCreditsRepository()
         {
             return new PgsqlInteractionCreditsRepository(_connectionString);
         }

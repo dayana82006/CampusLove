@@ -11,6 +11,9 @@ namespace CampusLove.Application.UI.User
         private readonly GendersService _gendersService;
         private readonly CareersService _careersService;
         private readonly AddressesService _addressesService;
+        private readonly InteractionsService _interactionsService;
+        private readonly InteractionCreditsService _creditsService;
+        private readonly MatchesService _matchesService;
         private readonly dynamic _usuario;
 
         public UIUsers(
@@ -20,6 +23,9 @@ namespace CampusLove.Application.UI.User
             GendersService gendersService,
             CareersService careersService,
             AddressesService addressesService,
+            InteractionsService interactionsService,
+            InteractionCreditsService creditsService,
+            MatchesService matchesService,
             dynamic usuario)
         {
             _userService = userService;
@@ -28,11 +34,15 @@ namespace CampusLove.Application.UI.User
             _gendersService = gendersService;
             _careersService = careersService;
             _addressesService = addressesService;
+            _interactionsService = interactionsService;
+            _creditsService = creditsService;
+            _matchesService = matchesService;
             _usuario = usuario;
         }
        public string InitialMenu()
 {
     Console.Clear();
+    var creditos = _creditsService.GetAvailableCredits((int)_usuario.id_user);
     Console.ForegroundColor = ConsoleColor.Magenta;
     Console.WriteLine("\t(¯`·.¸¸.·´¯`.¸¸.-> ✧˚･ﾟ: *✧:ﾟ･ﾟ:* LOVE ZONE *:･ﾟ✧*:ﾟ･ﾟ:˚ <-.·´¯`·.¸¸.·´¯)");
     Console.ResetColor();
@@ -40,7 +50,7 @@ namespace CampusLove.Application.UI.User
 
     Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine($"\n\t👤 Usuario: {_usuario.first_name} {_usuario.last_name}");
-    Console.WriteLine($"\t🎁 Créditos disponibles hoy: _usuario.credits");
+    Console.WriteLine($"\t🎁 Créditos disponibles hoy:  {creditos}");
     Console.WriteLine("\n\t════════════════════════════════════════════════════════");
 
     Console.ForegroundColor = ConsoleColor.Cyan;
@@ -89,14 +99,19 @@ namespace CampusLove.Application.UI.User
                             _gendersService,
                             _careersService,
                             _addressesService,
+                            _interactionsService,
+                            _creditsService,
+                            _matchesService,
                             _usuario);
                         viewer.BrowseProfiles();
                         break;
                     case "2":
-                        Console.WriteLine("Funcionalidad para ver mis coincidencias.");
+                        Console.Clear();
+                        Console.WriteLine("♥♥♥♥♥♥ MIS COINCIDENCIAS ♥♥♥♥♥♥");
                         break;
                     case "3":
-                        Console.WriteLine("Funcionalidad para ver estadísticas.");
+                        Console.Clear();
+                        Console.WriteLine("♥♥♥♥♥♥ ESTADÍSTICAS DEL SISTEMA ♥♥♥♥♥♥");
                         break;
                     case "4":
                         Console.Clear();

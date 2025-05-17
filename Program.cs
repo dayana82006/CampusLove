@@ -33,7 +33,7 @@ internal class Program
             var careerRepo = factory.CreateCareersRepository();
             var addressRepo = factory.CreateAddressesRepository();
             var userRepo = factory.CreateUsersRepository();
-            var creditsRepo = factory.CreateInteractionCreditsRepository();
+            var interactionsCreditsRepo = factory.CreateInteractionCreditsRepository();
             var interactionsRepo = factory.CreateInteractionsRepository();
             var matchesRepo = factory.CreateMatchesRepository();
             var interestsRepo = factory.CreateInterestsRepository();
@@ -41,24 +41,28 @@ internal class Program
 
             var careersService = new CareersService(careerRepo);
             var addressesService = new AddressesService(addressRepo, connStr);
-            var interactionsService = new InteractionsService(interactionsRepo);
             var interestsService = new InterestsService(interestsRepo, connStr);
             var usersInterestsService = new UsersInterestsService(usersInterestsRepo);
             var authService = new AuthService(userRepo);
-            var userService = new UserService(userRepo, creditsRepo, interactionsRepo, matchesRepo);
+            var userService = new UserService(userRepo, interactionsCreditsRepo, interactionsRepo, matchesRepo);
             var genderService = new GendersService(genderRepo);
+            var interactionsService = new InteractionsService(factory.CreateInteractionsRepository());
+            var interactionCreditsService = new InteractionCreditsService(interactionsRepo, interactionsCreditsRepo);
+            var matchesService = new MatchesService(factory.CreateMatchesRepository());
 
 
 
             var loginUI = new LoginUI(
                 authService,
-                 userService,
-                 interestsService,
-                 usersInterestsService,
+                userService,
+                interestsService,
+                usersInterestsService,
                 genderService,
-                   careersService,
-                     addressesService
-
+                careersService,
+                addressesService,
+                interactionsService,         
+                interactionCreditsService, 
+                matchesService   
             );
             loginUI.MostrarMenu();
 

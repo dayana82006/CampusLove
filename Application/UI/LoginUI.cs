@@ -18,6 +18,9 @@ namespace CampusLove.Application.UI
         private readonly AddressesService _addressService;
         private readonly InterestsService _interestService;
         private readonly UsersInterestsService _userInterestService;
+        private readonly InteractionsService _interactionsService;
+        private readonly InteractionCreditsService _creditsService;
+        private readonly MatchesService _matchesService;
 
         public LoginUI(
             AuthService repo,
@@ -26,7 +29,10 @@ namespace CampusLove.Application.UI
             UsersInterestsService userInterestService,
             GendersService genderService,
             CareersService careerService,
-            AddressesService addressService)
+            AddressesService addressService,
+            InteractionsService interactionsService,
+            InteractionCreditsService creditsService,
+            MatchesService matchesService)
         {
             _repo = repo;
             _userService = userService;
@@ -35,6 +41,9 @@ namespace CampusLove.Application.UI
             _genderService = genderService;
             _careerService = careerService;
             _addressService = addressService;
+            _interactionsService = interactionsService;
+            _creditsService = creditsService;
+            _matchesService = matchesService;
         }
 
         public LoginUI()
@@ -165,7 +174,7 @@ namespace CampusLove.Application.UI
 
             if (resultado.EsAdmin)
             {
-                string connStr = "Host=localhost;Database=db_campuslove;Port=5432;Username=postgres;Password=root";
+                string connStr = "Host=localhost;Database=db_campuslove;Port=5432;Username=postgres;Password=root123";
                 IDbFactory factory = new NpgsqlDbFactory(connStr);
                 var adminUI = new AdminUI(factory);
                 adminUI.MenuAdmin();
@@ -184,6 +193,9 @@ namespace CampusLove.Application.UI
                     _genderService,
                     _careerService,
                     _addressService,
+                    _interactionsService,
+                    _creditsService,
+                    _matchesService,
                     resultado.Usuario
 
                 );

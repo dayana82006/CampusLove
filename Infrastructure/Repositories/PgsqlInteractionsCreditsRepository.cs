@@ -1,12 +1,12 @@
 using System;
 using System.Data;
 using Npgsql;
-using CampusLove.Domain.Interfaces;
 using CampusLove.Domain.Entities;
+using CampusLove.Domain.Interfaces;
 
 namespace CampusLove.Infrastructure.Repositories
 {
-    public class PgsqlInteractionCreditsRepository : IInteractionCreditsRepository
+    public class PgsqlInteractionCreditsRepository : IInteractionsCreditsRepository
     {
         private readonly string _connectionString;
 
@@ -17,20 +17,7 @@ namespace CampusLove.Infrastructure.Repositories
 
         public int GetCreditsByUserId(int userId)
         {
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
-
-            const string query = @"
-                SELECT available_credits 
-                FROM InteractionCredits 
-                WHERE id_user = @userId;
-            ";
-
-            using var command = new NpgsqlCommand(query, connection);
-            command.Parameters.AddWithValue("@userId", userId);
-
-            var result = command.ExecuteScalar();
-            return result != null ? Convert.ToInt32(result) : 0;
+            return GetByUserId(userId)?.available_credits ?? 0;
         }
 
         public void UpdateCredits(int userId, int creditChange)
@@ -74,17 +61,68 @@ namespace CampusLove.Infrastructure.Repositories
 
         public InteractionCredits GetByUserId(int userId)
         {
-            throw new NotImplementedException();
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            const string query = @"
+                SELECT id_user, available_credits, last_update_date
+                FROM InteractionCredits
+                WHERE id_user = @userId;
+            ";
+
+            using var command = new NpgsqlCommand(query, connection);
+            command.Parameters.AddWithValue("@userId", userId);
+
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                return new InteractionCredits
+                {
+                    id_user = reader.GetInt32(0),
+                    available_credits = reader.GetInt32(1),
+                    last_update_date = reader.GetDateTime(2)
+                };
+            }
+
+            return null;
         }
 
         public void Add(InteractionCredits credits)
         {
-            throw new NotImplementedException();
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            const string query = @"
+                INSERT INTO InteractionCredits (id_user, available_credits, last_update_date)
+                VALUES (@userId, @credits, @date);
+            ";
+
+            using var command = new NpgsqlCommand(query, connection);
+            command.Parameters.AddWithValue("@userId", credits.id_user);
+            command.Parameters.AddWithValue("@credits", credits.available_credits);
+            command.Parameters.AddWithValue("@date", credits.last_update_date);
+
+            command.ExecuteNonQuery();
         }
 
         public void Update(InteractionCredits credits)
         {
-            throw new NotImplementedException();
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            const string query = @"
+                UPDATE InteractionCredits
+                SET available_credits = @credits,
+                    last_update_date = @date
+                WHERE id_user = @userId;
+            ";
+
+            using var command = new NpgsqlCommand(query, connection);
+            command.Parameters.AddWithValue("@credits", credits.available_credits);
+            command.Parameters.AddWithValue("@date", credits.last_update_date);
+            command.Parameters.AddWithValue("@userId", credits.id_user);
+
+            command.ExecuteNonQuery();
         }
     }
 }
