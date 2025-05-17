@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "jij8h7rensA=",
+  "dgSpecHash": "2zGRrOiX2ik=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\CampusLove.csproj",
+  "projectFilePath": "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Dayana\\.nuget\\packages\\dapper\\2.1.66\\dapper.2.1.66.nupkg.sha512",
-    "C:\\Users\\Dayana\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
-    "C:\\Users\\Dayana\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
-    "C:\\Users\\Dayana\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512"
+    "C:\\Users\\merli\\.nuget\\packages\\dapper\\2.1.66\\dapper.2.1.66.nupkg.sha512",
+    "C:\\Users\\merli\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\merli\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\merli\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512"
   ],
   "logs": []
 }
