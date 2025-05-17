@@ -1,21 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Dapper;
 using CampusLove.Domain.Entities;
-using CampusLove.Domain.Ports;
-using MySql.Data.MySqlClient;
+using CampusLove.Domain.Interfaces;
 
 namespace CampusLove.Application.Services
 {
     public class AuthService
     {
-        private readonly IUsuarioRepository _repo;        private const string ADMIN_USERNAME = "admin";
-        private const string ADMIN_PASSWORD = "admin123";
-        public AuthService(IUsuarioRepository repo)
+        private readonly IUsersRepository _repo;
 
+        // Usuario y hash SHA256 de "admin123"
+        private const string ADMIN_USERNAME = "admin";
+        private const string ADMIN_PASSWORD = "admin123"; 
+
+        public AuthService(IUsersRepository repo)
         {
             _repo = repo;
         }
@@ -24,76 +22,53 @@ namespace CampusLove.Application.Services
         {
             public bool Exitoso { get; set; }
             public bool EsAdmin { get; set; }
+            public Users? Usuario { get; set; }
         }
 
-        public LoginResultado Login(string usuario_email, string clave)
+        public LoginResultado Login(string user_email, string password)
         {
-            if (string.IsNullOrWhiteSpace(usuario_email) || string.IsNullOrWhiteSpace(clave))
+            if (string.IsNullOrWhiteSpace(user_email) || string.IsNullOrWhiteSpace(password))
             {
                 Console.WriteLine("❌ Usuario y contraseña son requeridos.");
                 return new LoginResultado { Exitoso = false };
             }
 
-            if (EsAdmin(usuario_email, clave))
+            var emailOrUser = user_email.Trim();
+            var passwordTrimmed = password.Trim();
+
+            if (EsAdmin(emailOrUser, password))
             {
                 return new LoginResultado { Exitoso = true, EsAdmin = true };
             }
 
-            var usuario = _repo.ObtenerPorEmail(usuario_email) ??
-                          _repo.ObtenerPorUsuario(usuario_email);
+            var user = _repo.GetByEmail(emailOrUser) ?? _repo.GetByUser(emailOrUser);
 
-            if (usuario == null)
+            if (user == null)
             {
-                Console.WriteLine("❌ Usuario no encontrado.");
                 return new LoginResultado { Exitoso = false };
             }
 
-            if (usuario.Clave != clave)
+           
+            if (user.password != password)
             {
-                Console.WriteLine("❌ Contraseña incorrecta.");
                 return new LoginResultado { Exitoso = false };
             }
 
-            return new LoginResultado { Exitoso = true, EsAdmin = false };
+            return new LoginResultado { Exitoso = true, EsAdmin = false, Usuario = user };
         }
 
-
-        public bool Registrar(Usuario nuevoUsuario)
+        public bool EsAdmin(string user, string password)
         {
-            if (nuevoUsuario.Edad < 16)
-            {
-                Console.WriteLine("🚫 Debes tener al menos 16 años para registrarte.");
-                return false;
-            }
-            if (nuevoUsuario.UsuarioName.ToLower() == ADMIN_USERNAME.ToLower() ||
-            nuevoUsuario.Email.ToLower() == ADMIN_USERNAME.ToLower())
-            {
-                Console.WriteLine("🚫 No puedes registrarte como administrador.");
-                return false;
-            }
-            try
-            {
-                _repo.Crear(nuevoUsuario);
-                Console.WriteLine("✅ Registro exitoso.");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("❌ Error al registrar: " + ex.Message);
-                return false;
-            }
-        }
-        public bool EsAdmin(string usuario, string clave)
-        {
-            return usuario == ADMIN_USERNAME && clave == ADMIN_PASSWORD;
+            //var hashed = HashPassword(password);
+            return user.Trim().ToLower() == ADMIN_USERNAME &&  password == ADMIN_PASSWORD;
         }
 
-        public static string HashPassword(string password)
+       /* private static string HashPassword(string password)
         {
             using var sha256 = SHA256.Create();
             var bytes = Encoding.UTF8.GetBytes(password);
             var hash = sha256.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
-        }
+        }*/
     }
 }

@@ -4,10 +4,10 @@ namespace CampusLove.Domain.Ports
 {
     public interface IGenericRepository<T>
     {
-        IEnumerable<T> ObtenerTodos(); // usar IEnumerable para más flexibilidad
-        T? ObtenerPorId(int id);       // nuevo método obligatorio
-        void Crear(T entity);
-        void Actualizar(T entity);
-        void Eliminar(int id);
+        IEnumerable<T> GetAll(); // usar IEnumerable para más flexibilidad
+        T? GetById(int id);       // nuevo método obligatorio
+        void Create(T entity);
+        void Update(T entity);
+        void Delete(int id);
     }
 }

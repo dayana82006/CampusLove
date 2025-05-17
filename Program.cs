@@ -1,11 +1,12 @@
 ﻿﻿using System;
+using System.Data;
 using System.Threading;
-using MySql.Data.MySqlClient;
-using CampusLove.Domain.Factory;
-using CampusLove.Domain.Ports;
-using CampusLove.Infrastructure.MySql;
-using CampusLove.Application.UI;
+using Npgsql;
 using CampusLove.Application.Services;
+using CampusLove.Domain.Interfaces;
+using CampusLove.Application.UI;
+using CampusLove.Infrastructure.Factories;
+
 internal class Program
 {
     private static void MostrarBarraDeCarga()
@@ -21,37 +22,51 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        string connectionString = "server=localhost;database=campus_love;user=root;password=root123;";
-        bool conexionExitosa = false;
+        string connStr = "Host=localhost;Database=db_campuslove;Port=5432;Username=postgres;password=root123;Pooling=true;";
+        IDbFactory factory = new NpgsqlDbFactory(connStr);
 
         MostrarBarraDeCarga();
 
-        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        try
         {
-            try
-            {
-                connection.Open();
+            var genderRepo = factory.CreateGendersRepository();
+            var careerRepo = factory.CreateCareersRepository();
+            var addressRepo = factory.CreateAddressesRepository();
+            var userRepo = factory.CreateUsersRepository();
+            var creditsRepo = factory.CreateInteractionCreditsRepository();
+            var interactionsRepo = factory.CreateInteractionsRepository();
+            var matchesRepo = factory.CreateMatchesRepository();
+            var interestsRepo = factory.CreateInterestsRepository();
+            var usersInterestsRepo = factory.CreateUsersInterestsRepository();
 
-            // Crear la factory con la conexión
-            IDbFactory factory = new MySqlDbFactory(connectionString);
+            var careersService = new CareersService(careerRepo);
+            var addressesService = new AddressesService(addressRepo, connStr);
+            var interactionsService = new InteractionsService(interactionsRepo);
+            var interestsService = new InterestsService(interestsRepo, connStr);
+            var usersInterestsService = new UsersInterestsService(usersInterestsRepo);
+            var authService = new AuthService(userRepo);
+            var userService = new UserService(userRepo, creditsRepo, interactionsRepo, matchesRepo);
+            var genderService = new GendersService(genderRepo);
 
-            // Usar la factory para obtener el repositorio
-            var usuarioRepo = factory.CrearUsuarioRepository();
 
-            // Inyectar el repo al servicio
-            var authService = new AuthService(usuarioRepo);
 
-            // Crear la UI con el servicio y mostrar menú
-            var loginUI = new LoginUI(authService);
+            var loginUI = new LoginUI(
+                authService,
+                 userService,
+                 interestsService,
+                 usersInterestsService,
+                genderService,
+                   careersService,
+                     addressesService
+
+            );
             loginUI.MostrarMenu();
-                conexionExitosa = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("❌ Error al conectar a la base de datos: " + ex.Message);
-            }
+
+
         }
-
-
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Error al conectar a la base de datos: " + ex.Message);
+        }
     }
 }

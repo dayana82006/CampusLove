@@ -3,6 +3,8 @@ namespace CampusLove.Domain.Entities
 {
     public class Usuario
     {
+        internal object password;
+
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -15,6 +17,6 @@ namespace CampusLove.Domain.Entities
         public string FrasePerfil { get; set; } = string.Empty;
         public int LikesRecibidos { get; set; }
         public int LikesDisponibles { get; set; }
-         public List<UsuarioIntereses> UsuarioIntereses { get; set; } = new();
+         
     }
 }

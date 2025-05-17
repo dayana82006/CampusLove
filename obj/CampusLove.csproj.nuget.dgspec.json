@@ -47,9 +47,9 @@
               "target": "Package",
               "version": "[2.1.66, )"
             },
-            "MySql.Data": {
+            "Npgsql": {
               "target": "Package",
-              "version": "[9.3.0, )"
+              "version": "[9.0.3, )"
             }
           },
           "imports": [
