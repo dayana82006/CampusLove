@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CampusLove.Domain.Interfaces;
 using CampusLove.Domain.Entities;
@@ -61,8 +62,43 @@ namespace CampusLove.Application.Services
 
         public bool IsMatch(int userId1, int userId2)
         {
+            // Verificar si existe el registro en la base de datos
             var (first, second) = userId1 < userId2 ? (userId1, userId2) : (userId2, userId1);
-            return _matchesRepository.MatchExists(first, second);
+            bool matchExists = _matchesRepository.MatchExists(first, second);
+            
+            if (!matchExists)
+            {
+                return false;
+            }
+            
+            // Verificar si ambos usuarios aún tienen likes mutuos
+            bool user1LikedUser2 = _interactionsRepository.GetAll()
+                .Any(i => i.id_user_origin == userId1 && 
+                          i.id_user_target == userId2 && 
+                          i.interaction_type == "like");
+
+            bool user2LikedUser1 = _interactionsRepository.GetAll()
+                .Any(i => i.id_user_origin == userId2 && 
+                          i.id_user_target == userId1 && 
+                          i.interaction_type == "like");
+
+            // Solo se considera match si ambos siguen teniendo likes mutuos
+            return user1LikedUser2 && user2LikedUser1;
+        }
+        
+        public List<Users> GetUserMatches(int userId, IEnumerable<Users> allUsers)
+        {
+            List<Users> matches = new List<Users>();
+            
+            foreach (var user in allUsers)
+            {
+                if (user.id_user != userId && IsMatch(userId, user.id_user))
+                {
+                    matches.Add(user);
+                }
+            }
+            
+            return matches;
         }
     }
 }
