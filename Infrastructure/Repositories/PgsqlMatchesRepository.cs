@@ -32,6 +32,31 @@ namespace CampusLove.Infrastructure.Repositories
             cmd.ExecuteNonQuery();
         }
 
+                public IEnumerable<Matches> GetAllMatches()
+        {
+            var matches = new List<Matches>();
+
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            const string query = "SELECT id_user1, id_user2, match_date FROM Matches";
+
+            using var cmd = new NpgsqlCommand(query, connection);
+            using var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                matches.Add(new Matches
+                {
+                    id_user1 = reader.GetInt32(0),
+                    id_user2 = reader.GetInt32(1),
+                    match_date = reader.GetDateTime(2)
+                });
+            }
+
+            return matches;
+        }
+
         public bool MatchExists(int userId1, int userId2)
         {
             using var connection = new NpgsqlConnection(_connectionString);
