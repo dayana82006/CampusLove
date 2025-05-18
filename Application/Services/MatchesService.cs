@@ -34,7 +34,9 @@ namespace CampusLove.Application.Services
 
             if (!user1LikedUser2 || !user2LikedUser1)
             {
-                return false; // No hay likes mutuos, no se crea match
+                // No hay likes mutuos, verificar si existe un match y eliminarlo
+                RemoveMatchIfExists(userId1, userId2);
+                return false;
             }
 
             // Ordenar IDs para mantener consistencia en cómo se guardan los matches
@@ -43,7 +45,14 @@ namespace CampusLove.Application.Services
             // Verificar si ya existe un match
             if (_matchesRepository.MatchExists(first, second))
             {
-                return true; // El match ya existe
+                // El match existe, actualizar la fecha
+                int matchId = _matchesRepository.GetMatchId(first, second);
+                if (matchId > 0)
+                {
+                    _matchesRepository.UpdateMatchDate(matchId, DateTime.Now);
+                    Console.WriteLine($"🔄 Match entre usuarios {first} y {second} actualizado con nueva fecha.");
+                }
+                return true;
             }
 
             // Crear nuevo match
@@ -58,6 +67,22 @@ namespace CampusLove.Application.Services
             
             Console.WriteLine($"🎉 ¡Match creado entre los usuarios {first} y {second}!");
             return true;
+        }
+
+        public void RemoveMatchIfExists(int userId1, int userId2)
+        {
+            // Ordenar IDs para mantener consistencia
+            var (first, second) = userId1 < userId2 ? (userId1, userId2) : (userId2, userId1);
+
+            if (_matchesRepository.MatchExists(first, second))
+            {
+                int matchId = _matchesRepository.GetMatchId(first, second);
+                if (matchId > 0)
+                {
+                    _matchesRepository.Delete(matchId);
+                    Console.WriteLine($"💔 Match eliminado entre usuarios {first} y {second}.");
+                }
+            }
         }
 
         public bool IsMatch(int userId1, int userId2)
@@ -82,10 +107,21 @@ namespace CampusLove.Application.Services
                           i.id_user_target == userId1 && 
                           i.interaction_type == "like");
 
-            // Solo se considera match si ambos siguen teniendo likes mutuos
-            return user1LikedUser2 && user2LikedUser1;
+            // Si ya no tienen likes mutuos, eliminar el match de la base de datos
+            if (!(user1LikedUser2 && user2LikedUser1))
+            {
+                RemoveMatchIfExists(userId1, userId2);
+                return false;
+            }
+
+            return true;
         }
         
+        public IEnumerable<Matches> GetAllMatches()
+        {
+            return _matchesRepository.GetAllMatches();
+        }
+
         public List<Users> GetUserMatches(int userId, IEnumerable<Users> allUsers)
         {
             List<Users> matches = new List<Users>();

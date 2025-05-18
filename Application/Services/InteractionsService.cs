@@ -9,11 +9,18 @@ namespace CampusLove.Application.Services
     {
         private readonly IInteractionsRepository _interactionsRepository;
         private readonly InteractionCreditsService _creditsService;
+        private MatchesService _matchesService; // Será inicializado después
 
         public InteractionsService(IInteractionsRepository interactionsRepository, InteractionCreditsService creditsService)
         {
             _interactionsRepository = interactionsRepository;
             _creditsService = creditsService;
+        }
+
+        // Método para establecer el MatchesService (para evitar dependencia circular)
+        public void SetMatchesService(MatchesService matchesService)
+        {
+            _matchesService = matchesService;
         }
 
         public bool RegisterInteraction(int userId, int targetUserId, string interactionType)
@@ -62,15 +69,36 @@ namespace CampusLove.Application.Services
                         _interactionsRepository.Update(existingInteraction);
                         _creditsService.DecrementCredit(userId);
 
+                        // Intentar crear match si hay likes mutuos
+                        if (_matchesService != null)
+                        {
+                            // Verificar si el otro usuario también dio like
+                            bool targetLikedUser = _interactionsRepository.GetAll()
+                                .Any(i => i.id_user_origin == targetUserId && 
+                                          i.id_user_target == userId && 
+                                          i.interaction_type == "like");
+                            
+                            if (targetLikedUser)
+                            {
+                                _matchesService.CreateMatch(userId, targetUserId);
+                            }
+                        }
+
                         Console.WriteLine("👍 Cambiaste de dislike a like. Crédito descontado.");
                         return true;
                     }
                     else if (interactionType == "dislike")
                     {
-                        // Cambio de like a dislike: no se afectan créditos
+                        // Cambio de like a dislike: no se afectan créditos pero se elimina match si existe
                         existingInteraction.interaction_type = "dislike";
                         existingInteraction.interaction_date = DateTime.Today; 
                         _interactionsRepository.Update(existingInteraction);
+                        
+                        // Eliminar match si existe
+                        if (_matchesService != null)
+                        {
+                            _matchesService.RemoveMatchIfExists(userId, targetUserId);
+                        }
 
                         Console.WriteLine("👎 Cambiaste de like a dislike. No se devuelven créditos.");
                         return false;
@@ -92,6 +120,21 @@ namespace CampusLove.Application.Services
                         // Nuevo like: descontar crédito
                         _interactionsRepository.Add(newInteraction);
                         _creditsService.DecrementCredit(userId);
+
+                        // Intentar crear match si hay likes mutuos
+                        if (_matchesService != null)
+                        {
+                            // Verificar si el otro usuario también dio like
+                            bool targetLikedUser = _interactionsRepository.GetAll()
+                                .Any(i => i.id_user_origin == targetUserId && 
+                                          i.id_user_target == userId && 
+                                          i.interaction_type == "like");
+                            
+                            if (targetLikedUser)
+                            {
+                                _matchesService.CreateMatch(userId, targetUserId);
+                            }
+                        }
 
                         Console.WriteLine("👍 Like registrado. Crédito descontado.");
                         return true;
