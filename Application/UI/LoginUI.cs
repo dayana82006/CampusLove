@@ -22,6 +22,7 @@ namespace CampusLove.Application.UI
         private readonly InteractionCreditsService _creditsService;
         private readonly MatchesService _matchesService;
         private readonly UserStatisticsService _userStatisticsService;
+        private readonly MessagesService _messagesService;
 
         public LoginUI(
             AuthService repo,
@@ -34,6 +35,7 @@ namespace CampusLove.Application.UI
             InteractionsService interactionsService,
             InteractionCreditsService creditsService,
             MatchesService matchesService,
+            MessagesService messagesService,
             UserStatisticsService userStatisticsService)
         {
             _repo = repo;
@@ -46,6 +48,7 @@ namespace CampusLove.Application.UI
             _interactionsService = interactionsService;
             _creditsService = creditsService;
             _matchesService = matchesService;
+            _messagesService = messagesService;
             _userStatisticsService = userStatisticsService;
         }
 
@@ -200,6 +203,7 @@ namespace CampusLove.Application.UI
                     _creditsService,
                     _matchesService,
                     _userStatisticsService,
+                    _messagesService,
                     resultado.Usuario
 
                 );

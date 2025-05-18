@@ -56,6 +56,10 @@ namespace CampusLove.Infrastructure.Factories
         {
             return new PgsqlUserStatisticsRepository(_connectionString);
         }
+        public IMessagesRepository CreateMessagesRepository()
+        {
+            return new PgsqlMessagesRepository(_connectionString);
+        }
     }
 
     
