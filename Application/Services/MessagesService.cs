@@ -219,11 +219,11 @@ namespace CampusLove.Application.Services
                         {
                             if (SendMessage(currentUserId, matchedUserId, content))
                             {
-                                Thread.Sleep(1500); // Pausa para mostrar el mensaje de éxito
+                                Thread.Sleep(1500);
                             }
                             else
                             {
-                                Thread.Sleep(2000); // Pausa más larga para errores
+                                Thread.Sleep(2000); 
                             }
                         }
                         else
