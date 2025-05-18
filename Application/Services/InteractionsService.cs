@@ -9,12 +9,17 @@ namespace CampusLove.Application.Services
     {
         private readonly IInteractionsRepository _interactionsRepository;
         private readonly InteractionCreditsService _creditsService;
+        private readonly UserStatisticsService _statisticsService;
         private MatchesService _matchesService; // Será inicializado después
 
-        public InteractionsService(IInteractionsRepository interactionsRepository, InteractionCreditsService creditsService)
+        public InteractionsService(
+            IInteractionsRepository interactionsRepository, 
+            InteractionCreditsService creditsService,
+            UserStatisticsService statisticsService)
         {
             _interactionsRepository = interactionsRepository;
             _creditsService = creditsService;
+            _statisticsService = statisticsService;
         }
 
         // Método para establecer el MatchesService (para evitar dependencia circular)
@@ -69,6 +74,10 @@ namespace CampusLove.Application.Services
                         _interactionsRepository.Update(existingInteraction);
                         _creditsService.DecrementCredit(userId);
 
+                        // Actualizar estadísticas: incrementar likes enviados, decrementar dislikes enviados
+                        _statisticsService.UpdateUserStatistics(userId);
+                        _statisticsService.UpdateUserStatistics(targetUserId);
+
                         // Intentar crear match si hay likes mutuos
                         if (_matchesService != null)
                         {
@@ -93,6 +102,10 @@ namespace CampusLove.Application.Services
                         existingInteraction.interaction_type = "dislike";
                         existingInteraction.interaction_date = DateTime.Today; 
                         _interactionsRepository.Update(existingInteraction);
+                        
+                        // Actualizar estadísticas: decrementar likes enviados, incrementar dislikes enviados
+                        _statisticsService.UpdateUserStatistics(userId);
+                        _statisticsService.UpdateUserStatistics(targetUserId);
                         
                         // Eliminar match si existe
                         if (_matchesService != null)
@@ -121,6 +134,10 @@ namespace CampusLove.Application.Services
                         _interactionsRepository.Add(newInteraction);
                         _creditsService.DecrementCredit(userId);
 
+                        // Actualizar estadísticas
+                        _statisticsService.RegisterSentLike(userId);
+                        _statisticsService.RegisterReceivedLike(targetUserId);
+
                         // Intentar crear match si hay likes mutuos
                         if (_matchesService != null)
                         {
@@ -142,6 +159,11 @@ namespace CampusLove.Application.Services
                     else if (interactionType == "dislike")
                     {
                         _interactionsRepository.Add(newInteraction);
+                        
+                        // Actualizar estadísticas
+                        _statisticsService.RegisterSentDislike(userId);
+                        _statisticsService.RegisterReceivedDislike(targetUserId);
+                        
                         Console.WriteLine("👎 Dislike registrado. No se descuentan créditos.");
                         return false;
                     }

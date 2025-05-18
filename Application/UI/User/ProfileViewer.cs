@@ -17,6 +17,7 @@ namespace CampusLove.Application.UI.User
         private readonly InteractionsService _interactionsService;
         private readonly InteractionCreditsService _creditsService;
         private readonly MatchesService _matchesService;
+                
         private readonly dynamic _currentUser;
 
         public ProfileViewer(

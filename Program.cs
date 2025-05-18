@@ -30,45 +30,50 @@ internal class Program
         try
         {
             var genderRepo = factory.CreateGendersRepository();
-var careerRepo = factory.CreateCareersRepository();
-var addressRepo = factory.CreateAddressesRepository();
-var userRepo = factory.CreateUsersRepository();
-var interactionsCreditsRepo = factory.CreateInteractionCreditsRepository();
-var interactionsRepo = factory.CreateInteractionsRepository();
-var matchesRepo = factory.CreateMatchesRepository();
-var interestsRepo = factory.CreateInterestsRepository();
-var usersInterestsRepo = factory.CreateUsersInterestsRepository();
+            var careerRepo = factory.CreateCareersRepository();
+            var addressRepo = factory.CreateAddressesRepository();
+            var userRepo = factory.CreateUsersRepository();
+            var interactionsCreditsRepo = factory.CreateInteractionCreditsRepository();
+            var interactionsRepo = factory.CreateInteractionsRepository();
+            var matchesRepo = factory.CreateMatchesRepository();
+            var interestsRepo = factory.CreateInterestsRepository();
+            var usersInterestsRepo = factory.CreateUsersInterestsRepository();
 
-var careersService = new CareersService(careerRepo);
-var addressesService = new AddressesService(addressRepo, connStr);
-var interestsService = new InterestsService(interestsRepo, connStr);
-var usersInterestsService = new UsersInterestsService(usersInterestsRepo);
-var authService = new AuthService(userRepo);
-var userService = new UserService(userRepo, interactionsCreditsRepo, interactionsRepo, matchesRepo);
-var genderService = new GendersService(genderRepo);
-var interactionCreditsService = new InteractionCreditsService(interactionsRepo, interactionsCreditsRepo); // 👈 se declara antes
-var interactionsService = new InteractionsService(
-    factory.CreateInteractionsRepository(),
-    interactionCreditsService
-);
-var matchesService = new MatchesService(matchesRepo, interactionsRepo);
+            var careersService = new CareersService(careerRepo);
+            var addressesService = new AddressesService(addressRepo, connStr);
+            var interestsService = new InterestsService(interestsRepo, connStr);
+            var usersInterestsService = new UsersInterestsService(usersInterestsRepo);
+            var authService = new AuthService(userRepo);
+            var userService = new UserService(userRepo, interactionsCreditsRepo, interactionsRepo, matchesRepo);
+            var genderService = new GendersService(genderRepo);
+            var interactionCreditsService = new InteractionCreditsService(interactionsRepo, interactionsCreditsRepo); // 👈 se declara antes
+            var userStatisticsService = new UserStatisticsService(
+            factory.CreateUserStatisticsRepository(),
+            userRepo,
+            interactionsRepo,
+            matchesRepo
+        );
+            var interactionsService = new InteractionsService(
+            factory.CreateInteractionsRepository(),
+            interactionCreditsService,
+            userStatisticsService 
+        );
 
-
-
-
+            var matchesService = new MatchesService(matchesRepo, interactionsRepo);
 
             var loginUI = new LoginUI(
-                authService,
-                userService,
-                interestsService,
-                usersInterestsService,
-                genderService,
-                careersService,
-                addressesService,
-                interactionsService,         
-                interactionCreditsService, 
-                matchesService   
-            );
+            authService,
+            userService,
+            interestsService,
+            usersInterestsService,
+            genderService,
+            careersService,
+            addressesService,
+            interactionsService,
+            interactionCreditsService,
+            matchesService,
+            userStatisticsService
+        );
             loginUI.MostrarMenu();
 
 
