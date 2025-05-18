@@ -9,11 +9,23 @@ namespace CampusLove.Application.Services
     {
         private readonly IInteractionsRepository _interactionsRepository;
         private readonly InteractionCreditsService _creditsService;
+        private readonly UserStatisticsService _statisticsService;
+        private MatchesService _matchesService; // Será inicializado después
 
-        public InteractionsService(IInteractionsRepository interactionsRepository, InteractionCreditsService creditsService)
+        public InteractionsService(
+            IInteractionsRepository interactionsRepository, 
+            InteractionCreditsService creditsService,
+            UserStatisticsService statisticsService)
         {
             _interactionsRepository = interactionsRepository;
             _creditsService = creditsService;
+            _statisticsService = statisticsService;
+        }
+
+        // Método para establecer el MatchesService (para evitar dependencia circular)
+        public void SetMatchesService(MatchesService matchesService)
+        {
+            _matchesService = matchesService;
         }
 
         public bool RegisterInteraction(int userId, int targetUserId, string interactionType)
@@ -62,15 +74,44 @@ namespace CampusLove.Application.Services
                         _interactionsRepository.Update(existingInteraction);
                         _creditsService.DecrementCredit(userId);
 
+                        // Actualizar estadísticas: incrementar likes enviados, decrementar dislikes enviados
+                        _statisticsService.UpdateUserStatistics(userId);
+                        _statisticsService.UpdateUserStatistics(targetUserId);
+
+                        // Intentar crear match si hay likes mutuos
+                        if (_matchesService != null)
+                        {
+                            // Verificar si el otro usuario también dio like
+                            bool targetLikedUser = _interactionsRepository.GetAll()
+                                .Any(i => i.id_user_origin == targetUserId && 
+                                          i.id_user_target == userId && 
+                                          i.interaction_type == "like");
+                            
+                            if (targetLikedUser)
+                            {
+                                _matchesService.CreateMatch(userId, targetUserId);
+                            }
+                        }
+
                         Console.WriteLine("👍 Cambiaste de dislike a like. Crédito descontado.");
                         return true;
                     }
                     else if (interactionType == "dislike")
                     {
-                        // Cambio de like a dislike: no se afectan créditos
+                        // Cambio de like a dislike: no se afectan créditos pero se elimina match si existe
                         existingInteraction.interaction_type = "dislike";
                         existingInteraction.interaction_date = DateTime.Today; 
                         _interactionsRepository.Update(existingInteraction);
+                        
+                        // Actualizar estadísticas: decrementar likes enviados, incrementar dislikes enviados
+                        _statisticsService.UpdateUserStatistics(userId);
+                        _statisticsService.UpdateUserStatistics(targetUserId);
+                        
+                        // Eliminar match si existe
+                        if (_matchesService != null)
+                        {
+                            _matchesService.RemoveMatchIfExists(userId, targetUserId);
+                        }
 
                         Console.WriteLine("👎 Cambiaste de like a dislike. No se devuelven créditos.");
                         return false;
@@ -93,12 +134,36 @@ namespace CampusLove.Application.Services
                         _interactionsRepository.Add(newInteraction);
                         _creditsService.DecrementCredit(userId);
 
+                        // Actualizar estadísticas
+                        _statisticsService.RegisterSentLike(userId);
+                        _statisticsService.RegisterReceivedLike(targetUserId);
+
+                        // Intentar crear match si hay likes mutuos
+                        if (_matchesService != null)
+                        {
+                            // Verificar si el otro usuario también dio like
+                            bool targetLikedUser = _interactionsRepository.GetAll()
+                                .Any(i => i.id_user_origin == targetUserId && 
+                                          i.id_user_target == userId && 
+                                          i.interaction_type == "like");
+                            
+                            if (targetLikedUser)
+                            {
+                                _matchesService.CreateMatch(userId, targetUserId);
+                            }
+                        }
+
                         Console.WriteLine("👍 Like registrado. Crédito descontado.");
                         return true;
                     }
                     else if (interactionType == "dislike")
                     {
                         _interactionsRepository.Add(newInteraction);
+                        
+                        // Actualizar estadísticas
+                        _statisticsService.RegisterSentDislike(userId);
+                        _statisticsService.RegisterReceivedDislike(targetUserId);
+                        
                         Console.WriteLine("👎 Dislike registrado. No se descuentan créditos.");
                         return false;
                     }

@@ -14,6 +14,7 @@ namespace CampusLove.Application.UI.User
         private readonly InteractionsService _interactionsService;
         private readonly InteractionCreditsService _creditsService;
         private readonly MatchesService _matchesService;
+        private readonly UserStatisticsService _userStatisticsService;
         private readonly dynamic _usuario;
 
         public UIUsers(
@@ -26,6 +27,7 @@ namespace CampusLove.Application.UI.User
             InteractionsService interactionsService,
             InteractionCreditsService creditsService,
             MatchesService matchesService,
+            UserStatisticsService userStatisticsService,
             dynamic usuario)
         {
             _userService = userService;
@@ -37,6 +39,7 @@ namespace CampusLove.Application.UI.User
             _interactionsService = interactionsService;
             _creditsService = creditsService;
             _matchesService = matchesService;
+            _userStatisticsService = userStatisticsService;
             _usuario = usuario;
         }
         
@@ -120,7 +123,10 @@ namespace CampusLove.Application.UI.User
                         break;
                     case "3":
                         Console.Clear();
-                        Console.WriteLine("♥♥♥♥♥♥ ESTADÍSTICAS DEL SISTEMA ♥♥♥♥♥♥");
+                        var statisticsViewer = new StatisticsViewer(
+                            _userStatisticsService,
+                            _usuario);
+                        statisticsViewer.DisplayStatistics();
                         break;
                     case "4":
                         Console.Clear();
