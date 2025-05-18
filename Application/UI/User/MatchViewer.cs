@@ -77,7 +77,7 @@ namespace CampusLove.Application.UI.User
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("\t ♥ ¸.•*¨*•♫♪♥ MIS COINCIDENCIAS ♥ ♪♫•*¨*•.¸ ♥");
                 Console.ResetColor();
-                
+
                 Users matchedUser = matchedUsers[index];
                 ShowMatchedUserProfile(matchedUser);
 
@@ -108,26 +108,27 @@ namespace CampusLove.Application.UI.User
                         // Cambiar a dislike y eliminar la coincidencia
                         Console.WriteLine($"¿Estás seguro que deseas eliminar la coincidencia con {matchedUser.first_name}? (S/N)");
                         var confirm = Console.ReadLine()?.Trim().ToUpper();
-                        
+
                         if (confirm == "S")
                         {
                             try
                             {
                                 _interactionsService.RegisterInteraction((int)_currentUser.id_user, matchedUser.id_user, "dislike");
                                 Console.WriteLine($"💔 Has eliminado la coincidencia con {matchedUser.first_name}.");
-                                
+
                                 // Refrescar la lista de coincidencias
                                 matchedUsers = GetMatchedUsers((int)_currentUser.id_user);
-                                
+
                                 // Ajustar el índice si es necesario
                                 if (matchedUsers.Count == 0)
                                 {
                                     Console.WriteLine("Ya no tienes coincidencias. ¡Sigue explorando!");
                                     Console.WriteLine("Presiona cualquier tecla para volver al menú principal...");
                                     Console.ReadKey();
+                                    Console.ResetColor();
                                     return;
                                 }
-                                
+
                                 if (index >= matchedUsers.Count)
                                 {
                                     index = matchedUsers.Count - 1;
@@ -141,6 +142,7 @@ namespace CampusLove.Application.UI.User
                         break;
 
                     case "S":
+                    Console.ResetColor();
                         return;
 
                     default:
@@ -148,6 +150,7 @@ namespace CampusLove.Application.UI.User
                         break;
                 }
             }
+            Console.ResetColor();
         }
 
         private List<Users> GetMatchedUsers(int currentUserId)
@@ -201,11 +204,10 @@ namespace CampusLove.Application.UI.User
 🏠 Ubicación     : {address}");
             Console.ResetColor();
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($@"
 ⊹⊱✿⊰⊹ Intereses en común ⊹⊱✿⊰⊹
 
-    {interestsList}");
+{interestsList}");
             Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.Magenta;
