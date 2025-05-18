@@ -20,20 +20,15 @@ namespace CampusLove.Application.Services
         {
             try
             {
-                // Siempre revisamos si hay que resetear los créditos
                 _creditsService.CheckAndResetCredits(userId);
 
-                // Buscar interacción existente por usuario origen, usuario destino (sin filtrar por fecha)
                 var existingInteraction = _interactionsRepository
                     .GetAll()
                     .FirstOrDefault(i => i.id_user_origin == userId && i.id_user_target == targetUserId);
 
-                // Si la interacción es un like, primero verificar si hay créditos suficientes
                 if (interactionType == "like")
                 {
-                    // Solo verificar créditos si:
-                    // 1. No existe interacción previa, o
-                    // 2. Existe una interacción pero es de tipo dislike (cambio de dislike a like)
+                  
                     bool needsCredit = existingInteraction == null || 
                                       (existingInteraction != null && existingInteraction.interaction_type == "dislike");
                     
@@ -48,7 +43,6 @@ namespace CampusLove.Application.Services
                     }
                 }
 
-                // Proceso según si existe o no una interacción previa
                 if (existingInteraction != null)
                 {
                     // Ya existe una interacción previa, verificar si es del mismo tipo
@@ -64,7 +58,7 @@ namespace CampusLove.Application.Services
                     {
                         // Cambio de dislike a like: se descuenta crédito
                         existingInteraction.interaction_type = "like";
-                        existingInteraction.interaction_date = DateTime.Today; // Actualizar fecha
+                        existingInteraction.interaction_date = DateTime.Today; 
                         _interactionsRepository.Update(existingInteraction);
                         _creditsService.DecrementCredit(userId);
 
@@ -75,7 +69,7 @@ namespace CampusLove.Application.Services
                     {
                         // Cambio de like a dislike: no se afectan créditos
                         existingInteraction.interaction_type = "dislike";
-                        existingInteraction.interaction_date = DateTime.Today; // Actualizar fecha
+                        existingInteraction.interaction_date = DateTime.Today; 
                         _interactionsRepository.Update(existingInteraction);
 
                         Console.WriteLine("👎 Cambiaste de like a dislike. No se devuelven créditos.");
@@ -104,7 +98,6 @@ namespace CampusLove.Application.Services
                     }
                     else if (interactionType == "dislike")
                     {
-                        // Nuevo dislike: no afecta créditos
                         _interactionsRepository.Add(newInteraction);
                         Console.WriteLine("👎 Dislike registrado. No se descuentan créditos.");
                         return false;

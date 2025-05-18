@@ -83,21 +83,16 @@ namespace CampusLove.Application.UI.User
                 {
                     case "L":
                         {
-                            // No necesitamos verificar los créditos aquí, ya que RegisterInteraction lo hace
                             try
                             {
-                                // RegisterInteraction devuelve true si se descontó un crédito
                                 bool creditWasDecremented = _interactionsService.RegisterInteraction(
                                     _currentUser.id_user, user.id_user, "like");
 
-                                // Solo mostrar mensaje adicional si se procesó correctamente
                                 if (creditWasDecremented)
                                 {
-                                    // Obtener créditos actualizados después de la operación
                                     availableCredits = _creditsService.GetAvailableCredits(_currentUser.id_user);
                                     Console.WriteLine($"💖 Diste like a {user.first_name}. Te quedan {availableCredits} créditos hoy.");
 
-                                    // Verificar si hay match después de dar like
                                     if (_interactionsService.IsMutualLike(_currentUser.id_user, user.id_user))
                                     {
                                         bool matchCreated = _matchesService.CreateMatch(_currentUser.id_user, user.id_user);
@@ -119,7 +114,6 @@ namespace CampusLove.Application.UI.User
                             try
                             {
                                 _interactionsService.RegisterInteraction(_currentUser.id_user, user.id_user, "dislike");
-                                // El mensaje de dislike se muestra dentro del método RegisterInteraction
                             }
                             catch (Exception ex)
                             {
