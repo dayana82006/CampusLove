@@ -4,7 +4,7 @@ namespace CampusLove.Domain.Interfaces
 {
     public interface IDbFactory
     {
-         ICountryRepository CreateCountryRepository();
+        ICountryRepository CreateCountryRepository();
 
         IUsersRepository CreateUsersRepository();
         IAddressesRepository CreateAddressesRepository();

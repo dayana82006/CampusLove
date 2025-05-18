@@ -1,13 +1,15 @@
+using CampusLove.Application.Services;
 using CampusLove.Application.UI.Admin.Countries;
-using CampusLove.Domain.Entities;
+using CampusLove.Application.UI.Admin.Users;
 using CampusLove.Domain.Interfaces;
 
 namespace CampusLove.Application.UI
 {
     public class AdminUI
     {
+
+
         private readonly IDbFactory _factory;
-        private IDbFactory factory;
 
         public AdminUI(IDbFactory factory)
         {
@@ -33,8 +35,8 @@ namespace CampusLove.Application.UI
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("⋆｡ﾟ☁︎｡⋆｡ ﾟ☾ ﾟ｡⋆｡ﾟ☁︎｡⋆｡  ﾟ｡⋆｡⋆｡ ﾟ☾｡☁︎｡⋆｡ ﾟ☾☾｡⋆｡ ");
-            Console.WriteLine("      💌 C A M P U S   L O V E 💌");
-            Console.WriteLine("       ❝ BIENVENIDO ADMINISTRADOR ❞");
+            Console.WriteLine("     💌 C A M P U S   L O V E 💌");
+            Console.WriteLine("     ❝ BIENVENIDO ADMINISTRADOR ❞");
             Console.WriteLine("⋆｡ﾟ☁︎｡⋆｡ ﾟ☾ ﾟ｡⋆☁︎｡⋆｡ ﾟ☾｡ ﾟ☁︎｡⋆｡ ﾟ☾ ﾟ｡⋆｡ ﾟ｡ﾟ☁︎｡⋆\n");
             Console.ResetColor();
 
@@ -43,7 +45,6 @@ namespace CampusLove.Application.UI
             while (!salir)
             {
                 Console.Clear();
-                MenuAdmin();
                 Console.WriteLine(Menu());
                 Console.Write("💗 Seleccione una opción 💗 : ");
                 int opcion = Utilidades.LeerOpcionMenuKey(Menu());
@@ -51,8 +52,26 @@ namespace CampusLove.Application.UI
                 switch (opcion)
                 {
                     case 1:
-                        // TODO: Manejo Usuarios
+                        var userRepo = _factory.CreateUsersRepository();
+                        var creditsRepo = _factory.CreateInteractionCreditsRepository(); // CORREGIDO
+                        var interactionsRepo = _factory.CreateInteractionsRepository();
+                        var matchesRepo = _factory.CreateMatchesRepository();
+
+                        var userService = new UserService(userRepo, creditsRepo, interactionsRepo, matchesRepo);
+                        var genderService = new GendersService(_factory.CreateGendersRepository());
+                        var careerService = new CareersService(_factory.CreateCareersRepository());
+                        var connStr = "Host=localhost;Username=postgres;Password=1234;Database=CampusLove"; // ejemplo
+
+                        var addressService = new AddressesService(
+                            _factory.CreateAddressesRepository(),
+                            connStr
+                        );
+                        var uiUser = new UIManageusers(_factory, userService, genderService, careerService, addressService);
+                        uiUser.GestionUsers();
                         break;
+
+
+
                     case 2:
                         // TODO: Manejo Carreras
                         break;
@@ -66,7 +85,7 @@ namespace CampusLove.Application.UI
                         // TODO: Manejo Ciudad
                         break;
                     case 6:
-                         var uiCountry = new UIPais(_factory);
+                        var uiCountry = new UIPais(_factory);
                         uiCountry.GestionPaises();
                         break;
                     case 7:
@@ -77,7 +96,7 @@ namespace CampusLove.Application.UI
                         break;
                     case 0:
                         Console.Write("\n¿Está seguro que desea salir? 🥺 (S/N): ");
-                        salir = Utilidades.LeerTecla();
+                        salir = Utilidades.LeerTecla(); // debe devolver true si confirma salir
                         if (salir)
                         {
                             Console.Clear();
@@ -86,9 +105,11 @@ namespace CampusLove.Application.UI
                         break;
                     default:
                         Console.WriteLine("⚠️ Opción no válida. ⚠️");
+                        Console.ReadKey();
                         break;
                 }
             }
         }
+
     }
 }
