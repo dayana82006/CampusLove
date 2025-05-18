@@ -81,7 +81,6 @@ namespace CampusLove.Application.UI.User
                 Users matchedUser = matchedUsers[index];
                 ShowMatchedUserProfile(matchedUser);
 
-                // Obtener fecha del match
                 DateTime matchDate = GetMatchDate((int)_currentUser.id_user, matchedUser.id_user);
                 
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -109,7 +108,7 @@ namespace CampusLove.Application.UI.User
                         break;
 
                     case "D":
-                        // Cambiar a dislike y eliminar la coincidencia
+
                         Console.WriteLine($"¿Estás seguro que deseas eliminar la coincidencia con {matchedUser.first_name}? (S/N)");
                         var confirm = Console.ReadLine()?.Trim().ToUpper();
                         
@@ -120,10 +119,8 @@ namespace CampusLove.Application.UI.User
                                 _interactionsService.RegisterInteraction((int)_currentUser.id_user, matchedUser.id_user, "dislike");
                                 Console.WriteLine($"💔 Has eliminado la coincidencia con {matchedUser.first_name}.");
                                 
-                                // Refrescar la lista de coincidencias después de eliminar
                                 matchedUsers = GetMatchedUsers((int)_currentUser.id_user);
                                 
-                                // Ajustar el índice si es necesario
                                 if (matchedUsers.Count == 0)
                                 {
                                     Console.WriteLine("Ya no tienes coincidencias. ¡Sigue explorando!");
@@ -172,7 +169,6 @@ namespace CampusLove.Application.UI.User
             {
                 if (user.id_user != currentUserId && _matchesService.IsMatch(currentUserId, user.id_user))
                 {
-                    // Solo agregar si hay likes mutuos
                     if (_interactionsService.IsMutualLike(currentUserId, user.id_user))
                     {
                         matchedUsers.Add(user);
@@ -218,7 +214,7 @@ namespace CampusLove.Application.UI.User
             Console.WriteLine($@"
 ⊹⊱✿⊰⊹ Intereses en común ⊹⊱✿⊰⊹
 
-    {interestsList}");
+{interestsList}");
             Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.Magenta;

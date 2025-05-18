@@ -181,7 +181,6 @@ namespace CampusLove.Infrastructure.Repositories
             return list;
         }
 
-        // IMPLEMENTACIÓN REQUERIDA: Exists
         public bool Exists(int userId, int targetUserId)
         {
             using var conn = new NpgsqlConnection(_connectionString);
@@ -198,7 +197,6 @@ namespace CampusLove.Infrastructure.Repositories
             return count > 0;
         }
 
-        // IMPLEMENTACIÓN REQUERIDA: GetInteraction
         public Interactions? GetInteraction(int originId, int targetId)
         {
             using var conn = new NpgsqlConnection(_connectionString);

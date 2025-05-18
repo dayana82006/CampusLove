@@ -19,7 +19,7 @@ namespace CampusLove.Application.UI.User
         public void DisplayStatistics()
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("\t 🌟 ESTADÍSTICAS DEL AMOR 🌟");
             Console.ResetColor();
 

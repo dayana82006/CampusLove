@@ -25,21 +25,18 @@ namespace CampusLove.Application.Services
             _matchesRepository = matchesRepository;
         }
 
-        // Obtener las estadísticas de un usuario específico
         public UserStatistics GetUserStatistics(int userId)
         {
             try
             {
                 var stats = _userStatisticsRepository.GetByUserId(userId);
 
-                // Si no existen estadísticas para este usuario, crearlas
                 if (stats == null)
                 {
                     stats = CreateAndInitializeStatistics(userId);
                 }
                 else
                 {
-                    // Actualizar las estadísticas para mantenerlas sincronizadas
                     UpdateUserStatistics(userId);
                     stats = _userStatisticsRepository.GetByUserId(userId);
                 }
@@ -53,12 +50,10 @@ namespace CampusLove.Application.Services
             }
         }
 
-        // Crear y inicializar estadísticas para un usuario
         private UserStatistics CreateAndInitializeStatistics(int userId)
         {
             try
             {
-                // Crear un nuevo objeto de estadísticas
                 var stats = new UserStatistics
                 {
                     id_user = userId,
@@ -70,10 +65,8 @@ namespace CampusLove.Application.Services
                     last_update = DateTime.Now
                 };
 
-                // Calcular estadísticas iniciales
                 CalculateUserStatistics(userId, stats);
                 
-                // Guardar en la base de datos
                 _userStatisticsRepository.Add(stats);
                 
                 return stats;
@@ -98,13 +91,10 @@ namespace CampusLove.Application.Services
                     return;
                 }
 
-                // Actualizar las estadísticas calculando desde cero
                 CalculateUserStatistics(userId, stats);
                 
-                // Actualizar la fecha de la última actualización
                 stats.last_update = DateTime.Now;
                 
-                // Guardar en la base de datos
                 _userStatisticsRepository.Update(stats);
             }
             catch (Exception ex)
@@ -113,7 +103,6 @@ namespace CampusLove.Application.Services
             }
         }
 
-        // Calcular las estadísticas para un usuario
         private void CalculateUserStatistics(int userId, UserStatistics stats)
         {
             var interactions = _interactionsRepository.GetAll();
@@ -190,7 +179,6 @@ namespace CampusLove.Application.Services
                     result.Add((user, stats.received_likes));
                 }
 
-                // Ordenar por cantidad de likes recibidos (descendente)
                 return result.OrderByDescending(item => item.Likes).Take(topCount).ToList();
             }
             catch (Exception ex)
@@ -214,7 +202,6 @@ namespace CampusLove.Application.Services
                     result.Add((user, stats.total_matches));
                 }
 
-                // Ordenar por cantidad de matches (descendente)
                 return result.OrderByDescending(item => item.Matches).Take(topCount).ToList();
             }
             catch (Exception ex)
@@ -224,7 +211,7 @@ namespace CampusLove.Application.Services
             }
         }
 
-        // Obtener usuarios más activos (que más likes han enviado)
+        // Obtener usuarios más activos 
         public List<(Users User, int SentLikes)> GetMostActiveUsers(int topCount = 5)
         {
             try
@@ -238,7 +225,6 @@ namespace CampusLove.Application.Services
                     result.Add((user, stats.sent_likes));
                 }
 
-                // Ordenar por cantidad de likes enviados (descendente)
                 return result.OrderByDescending(item => item.SentLikes).Take(topCount).ToList();
             }
             catch (Exception ex)
@@ -248,7 +234,6 @@ namespace CampusLove.Application.Services
             }
         }
 
-        // Obtener usuarios con mejor ratio de likes/dislikes recibidos
         public List<(Users User, double Ratio)> GetUsersWithBestLikeRatio(int topCount = 5)
 {
     try
@@ -263,15 +248,13 @@ namespace CampusLove.Application.Services
 
             int totalReceived = stats.received_likes + stats.received_dislikes;
 
-            // Calcular ratio solo si tiene interacciones
             if (totalReceived > 0)
             {
                 ratio = (double)stats.received_likes / totalReceived;
-                result.Add((user, ratio)); // solo se agregan los usuarios válidos
+                result.Add((user, ratio)); 
             }
         }
 
-        // Ordenar por ratio (descendente)
         return result
             .OrderByDescending(item => item.Ratio)
             .Take(topCount)

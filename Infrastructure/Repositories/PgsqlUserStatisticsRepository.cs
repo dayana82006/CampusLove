@@ -281,7 +281,7 @@ namespace CampusLove.Infrastructure.Repositories
             return topUsers;
         }
 
-        // Método para obtener usuarios más activos (más likes enviados)
+        // Método para obtener usuarios más activos 
         public List<UserStatisticsWithUserInfo> GetMostActiveUsers(int limit = 5)
         {
             List<UserStatisticsWithUserInfo> topUsers = new List<UserStatisticsWithUserInfo>();
@@ -334,7 +334,6 @@ namespace CampusLove.Infrastructure.Repositories
             return topUsers;
         }
 
-        // Método para obtener usuarios con mejor ratio de likes/dislikes
         public List<UserStatisticsWithUserInfo> GetTopUsersByLikeRatio(int limit = 5)
         {
             List<UserStatisticsWithUserInfo> topUsers = new List<UserStatisticsWithUserInfo>();
@@ -395,7 +394,6 @@ namespace CampusLove.Infrastructure.Repositories
             return topUsers;
         }
 
-        // Crear tabla de estadísticas si no existe
         public void EnsureTableExists()
         {
             try
@@ -428,7 +426,6 @@ namespace CampusLove.Infrastructure.Repositories
         }
     }
 
-    // Clase para incluir información adicional del usuario con las estadísticas
     public class UserStatisticsWithUserInfo : UserStatistics
     {
         public string first_name { get; set; }
