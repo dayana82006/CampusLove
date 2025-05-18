@@ -18,18 +18,18 @@ namespace CampusLove.Application.UI.User
         private readonly InteractionCreditsService _creditsService;
         private readonly MatchesService _matchesService;
         private readonly dynamic _currentUser;
-        private dynamic usuario;
 
-        public ProfileViewer(UserService userService,
-                             UsersInterestsService usersInterestsService,
-                             InterestsService interestsService,
-                             GendersService gendersService,
-                             CareersService careersService,
-                             AddressesService addressesService,
-                             InteractionsService interactionsService,
-                             InteractionCreditsService creditsService,
-                             MatchesService matchesService,
-                             dynamic currentUser)
+        public ProfileViewer(
+            UserService userService,
+            UsersInterestsService usersInterestsService,
+            InterestsService interestsService,
+            GendersService gendersService,
+            CareersService careersService,
+            AddressesService addressesService,
+            InteractionsService interactionsService,
+            InteractionCreditsService creditsService,
+            MatchesService matchesService,
+            dynamic currentUser)
         {
             _userService = userService;
             _usersInterestsService = usersInterestsService;
@@ -41,17 +41,6 @@ namespace CampusLove.Application.UI.User
             _creditsService = creditsService;
             _matchesService = matchesService;
             _currentUser = currentUser;
-        }
-
-        public ProfileViewer(UserService userService, UsersInterestsService usersInterestsService, InterestsService interestsService, GendersService gendersService, CareersService careersService, AddressesService addressesService, dynamic usuario)
-        {
-            _userService = userService;
-            _usersInterestsService = usersInterestsService;
-            _interestsService = interestsService;
-            _gendersService = gendersService;
-            _careersService = careersService;
-            _addressesService = addressesService;
-            this.usuario = usuario;
         }
 
         public void BrowseProfiles()
@@ -67,13 +56,18 @@ namespace CampusLove.Application.UI.User
             }
 
             int index = 0;
-            _creditsService.CheckAndResetCredits(_currentUser.id_user);
+            _creditsService.CheckAndResetCredits(_currentUser.id_user); // Renueva créditos si es nuevo día
 
             while (true)
             {
                 Console.Clear();
                 var user = otherUsers[index];
+                // Mostrar perfil actual y créditos disponibles
                 ShowProfile(user);
+                
+                // Actualizar y mostrar créditos disponibles
+                int availableCredits = _creditsService.GetAvailableCredits(_currentUser.id_user);
+                Console.WriteLine($"\n💰 Créditos disponibles hoy: {availableCredits}/10");
 
                 Console.WriteLine(@"
 ¿Qué deseas hacer?
@@ -83,50 +77,76 @@ namespace CampusLove.Application.UI.User
     [P] Anterior
     [S] Salir
 ");
- var option = Console.ReadLine()?.Trim().ToUpper();
+                var option = Console.ReadLine()?.Trim().ToUpper();
 
                 switch (option)
                 {
                     case "L":
-                        if (_creditsService.GetAvailableCredits(_currentUser.id_user) > 0)
                         {
-                            _interactionsService.RegisterInteraction(_currentUser.id_user, user.id_user, "like");
-                            _creditsService.DecrementCredit(_currentUser.id_user);
-                            Console.WriteLine($"💖 Diste like a {user.first_name}.");
-
-                            if (_interactionsService.IsMutualLike(_currentUser.id_user, user.id_user))
+                            try
                             {
-                                _matchesService.CreateMatch(_currentUser.id_user, user.id_user);
-                                Console.WriteLine("🎉 ¡Es un match!");
+                                bool creditWasDecremented = _interactionsService.RegisterInteraction(
+                                    _currentUser.id_user, user.id_user, "like");
+
+                                if (creditWasDecremented)
+                                {
+                                    availableCredits = _creditsService.GetAvailableCredits(_currentUser.id_user);
+                                    Console.WriteLine($"💖 Diste like a {user.first_name}. Te quedan {availableCredits} créditos hoy.");
+
+                                    if (_interactionsService.IsMutualLike(_currentUser.id_user, user.id_user))
+                                    {
+                                        bool matchCreated = _matchesService.CreateMatch(_currentUser.id_user, user.id_user);
+                                        if (matchCreated)
+                                        {
+                                            Console.WriteLine("🎉 ¡Es un match! Ahora pueden comenzar a chatear.");
+                                        }
+                                    }
+                                }
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine("⚠️ Créditos agotados. Vuelve mañana para seguir dando likes.");
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"❌ Error al procesar like: {ex.Message}");
+                            }
                         }
                         break;
                     case "D":
-                        _interactionsService.RegisterInteraction(_currentUser.id_user, user.id_user, "dislike");
-                        Console.WriteLine($"👎 Diste dislike a {user.first_name}.");
+                        {
+                            try
+                            {
+                                _interactionsService.RegisterInteraction(_currentUser.id_user, user.id_user, "dislike");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"❌ Error al procesar dislike: {ex.Message}");
+                            }
+                        }
                         break;
+
                     case "N":
                         index = (index + 1) % otherUsers.Count;
                         break;
+
                     case "P":
                         index = (index - 1 + otherUsers.Count) % otherUsers.Count;
                         break;
+
                     case "S":
                         return;
+
                     default:
                         Console.WriteLine("⚠️ Opción no válida.");
                         break;
                 }
-                Console.WriteLine("Presiona una tecla para continuar...");
-                Console.ReadKey();
+
+                if (option != "N" && option != "P")
+                {
+                    Console.WriteLine("Presiona una tecla para continuar...");
+                    Console.ReadKey();
+                }
             }
         }
 
-        private void ShowProfile(CampusLove.Domain.Entities.Users user)
+        private void ShowProfile(Users user)
         {
             var gender = _gendersService.GetById(user.id_gender)?.genre_name ?? "No especificado";
             var career = _careersService.GetById(user.id_career)?.career_name ?? "No especificado";
@@ -138,38 +158,28 @@ namespace CampusLove.Application.UI.User
             string interestsList = string.Join(Environment.NewLine, interests.Select(i => "                        - " + i));
 
             Console.InputEncoding = System.Text.Encoding.UTF8;
-        Console.Clear();
-          Console.WriteLine($@"
-                ╔══════════════════════════════════════════════════════════════════╗
-                ║     ♥♥♥ BIENVENID@ A TU PERFIL ROMÁNTICO PERSONALIZADO ♥♥♥     ║
-                ╚══════════════════════════════════════════════════════════════════╝
+            Console.Clear();
+            Console.WriteLine($@"
+╔══════════════════════════════════════════════════════════════════╗
+║     ♥♥♥ BIENVENID@ A TU PERFIL ROMÁNTICO PERSONALIZADO ♥♥♥     ║
+╚══════════════════════════════════════════════════════════════════╝
 
-                ███████████████████████████████████████████████████████████████████
-                ███─▄▄▄─██▀▄─██▄─▀█▀─▄█▄─▄▄─█▄─██─▄█─▄▄▄▄█▄─▄███─▄▄─█▄─█─▄█▄─▄▄─███
-                ███─███▀██─▀─███─█▄█─███─▄▄▄██─██─██▄▄▄▄─██─██▀█─██─██▄▀▄███─▄█▀███
-                ▀▀▀▄▄▄▄▄▀▄▄▀▄▄▀▄▄▄▀▄▄▄▀▄▄▄▀▀▀▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▀▀▀▄▀▀▀▄▄▄▄▄▀▀▀
+👤 Nombre        : {user.first_name} {user.last_name}
+🎂 Edad          : {CalculateAge(user.birth_date)} años
+📧 Email         : {user.email}
+🚻 Género        : {gender}
+🎓 Carrera       : {career}
+💬 Frase de perfil:
+❝ {user.profile_phrase} ❞
+🏠 Ubicación     : {address}
 
-                ⊹⊱✿⊰⊹ Información Personal ⊹⊱✿⊰⊹
+⊹⊱✿⊰⊹ Intereses del Corazón ⊹⊱✿⊰⊹
 
-                👤 Nombre        : {user.first_name} {user.last_name}
-                🎂 Edad          : {CalculateAge(user.birth_date)} años
-                📧 Email         : {user.email}
-                🚻 Género        : {gender}
-                🎓 Carrera       : {career}
-                💬 Frase de perfil:
-                ❝ {user.profile_phrase} ❞
-                🏠 Ubicación     : {address}
+    {interestsList}
 
-                ⊹⊱✿⊰⊹ Intereses del Corazón ⊹⊱✿⊰⊹
-
-                    {interestsList}
-
-                ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-                ˗ˏˋ ★ ˎˊ˗ ʕ•́ᴥ•̀ʔっ♡ Gracias por ser parte de este viaje amoroso.
+˗ˏˋ ★ ˎˊ˗ ʕ•́ᴥ•̀ʔっ♡ Gracias por ser parte de este viaje amoroso.
 
 ");
-
         }
 
         private int CalculateAge(DateTime birthDate)

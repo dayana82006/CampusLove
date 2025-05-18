@@ -21,74 +21,60 @@ namespace CampusLove.Application.Services
 
         public void CheckAndResetCredits(int userId)
         {
-            var credits = _interactionCreditsRepository.GetByUserId(userId);
+            try {
+                var credits = _interactionCreditsRepository.GetByUserId(userId);
 
-            if (credits == null)
-            {
-                var newCredits = new InteractionCredits
+                if (credits == null)
                 {
-                    id_user = userId,
-                    available_credits = MaxDailyCredits,
-                    last_update_date = DateTime.UtcNow.Date
-                };
-                _interactionCreditsRepository.Add(newCredits);
-                return;
-            }
+                    // Primera vez del usuario, crear registro de créditos
+                    var newCredits = new InteractionCredits
+                    {
+                        id_user = userId,
+                        available_credits = MaxDailyCredits,
+                        last_update_date = DateTime.Today
+                    };
+                    _interactionCreditsRepository.Add(newCredits);
+                    return;
+                }
 
-            if (credits.last_update_date.Date < DateTime.UtcNow.Date)
-            {
-                credits.available_credits = MaxDailyCredits;
-                credits.last_update_date = DateTime.UtcNow.Date;
-                _interactionCreditsRepository.Update(credits);
+                // Si es un nuevo día, reiniciar créditos
+                if (credits.last_update_date.Date < DateTime.Today)
+                {
+                    credits.available_credits = MaxDailyCredits;
+                    credits.last_update_date = DateTime.Today;
+                    _interactionCreditsRepository.Update(credits);
+                    Console.WriteLine("🎁 ¡Tus créditos han sido renovados para hoy!");
+                }
+            }
+            catch (Exception ex) {
+                Console.WriteLine($"❌ Error al verificar créditos: {ex.Message}");
             }
         }
 
         public int GetAvailableCredits(int userId)
         {
-            var credits = _interactionCreditsRepository.GetByUserId(userId);
-            return credits?.available_credits ?? 0;
+            try {
+                var credits = _interactionCreditsRepository.GetByUserId(userId);
+                return credits?.available_credits ?? 0;
+            }
+            catch (Exception) {
+                // Si hay un error, devolver 0 para prevenir likes no autorizados
+                return 0;
+            }
         }
 
         public void DecrementCredit(int userId)
         {
-            var credits = _interactionCreditsRepository.GetByUserId(userId);
-            if (credits != null && credits.available_credits > 0)
-            {
-                credits.available_credits--;
-                _interactionCreditsRepository.Update(credits);
+            try {
+                var credits = _interactionCreditsRepository.GetByUserId(userId);
+                if (credits != null && credits.available_credits > 0)
+                {
+                    credits.available_credits--;
+                    _interactionCreditsRepository.Update(credits);
+                }
             }
-        }
-
-        public void UpdateCreditsAfterInteraction(int userId, int targetUserId, string interactionType)
-        {
-            var interaction = new Interactions
-            {
-                id_user_origin = userId,
-                id_user_target = targetUserId,
-                interaction_type = interactionType,
-                interaction_date = DateTime.UtcNow
-            };
-
-            _interactionsRepository.Add(interaction);
-
-            int creditChange = 0;
-
-            switch (interactionType.ToLower())
-            {
-                case "like":
-                    creditChange = 1;
-                    break;
-                case "dislike":
-                    creditChange = -1;
-                    break;
-                default:
-                    creditChange = 0;
-                    break;
-            }
-
-            if (creditChange != 0)
-            {
-                _interactionCreditsRepository.UpdateCredits(userId, creditChange);
+            catch (Exception ex) {
+                Console.WriteLine($"❌ Error al decrementar crédito: {ex.Message}");
             }
         }
 
