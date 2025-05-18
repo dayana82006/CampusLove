@@ -13,94 +13,129 @@ namespace CampusLove.Infrastructure.Repositories
 
         public PgsqlMessagesRepository(string connectionString)
         {
-            _connectionString = connectionString;
+            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
         public void Insert(Messages message)
         {
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
 
-            string query = "INSERT INTO messages (sender_id, receiver_id, message_text, message_time) VALUES (@id_user_sender, @id_user_receiver, @message_text, @send_date)";
-            using var command = new NpgsqlCommand(query, connection);
-            command.Parameters.AddWithValue("@id_user_sender", message.id_user_sender);
-            command.Parameters.AddWithValue("@id_user_receiver", message.id_user_receiver);
-            command.Parameters.AddWithValue("@message_text", message.content);
-            command.Parameters.AddWithValue("@send_date", message.send_date);
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
 
-            command.ExecuteNonQuery();
+                string query = "INSERT INTO messages (sender_id, receiver_id, message_text, message_time) VALUES (@sender_id, @receiver_id, @message_text, @message_time)";
+                using var command = new NpgsqlCommand(query, connection);
+                command.Parameters.AddWithValue("@sender_id", message.id_user_sender);
+                command.Parameters.AddWithValue("@receiver_id", message.id_user_receiver);
+                command.Parameters.AddWithValue("@message_text", message.content);
+                command.Parameters.AddWithValue("@message_time", message.send_date);
+
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al insertar mensaje en la base de datos: {ex.Message}", ex);
+            }
         }
 
         public void Delete(int messageId)
         {
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
 
-            string query = "DELETE FROM messages WHERE id = @id";
-            using var command = new NpgsqlCommand(query, connection);
-            command.Parameters.AddWithValue("@id", messageId);
+                string query = "DELETE FROM messages WHERE id = @id";
+                using var command = new NpgsqlCommand(query, connection);
+                command.Parameters.AddWithValue("@id", messageId);
 
-            command.ExecuteNonQuery();
+                int rowsAffected = command.ExecuteNonQuery();
+                if (rowsAffected == 0)
+                {
+                    throw new InvalidOperationException($"No se encontró mensaje con ID {messageId}");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al eliminar mensaje de la base de datos: {ex.Message}", ex);
+            }
         }
 
         public IEnumerable<Messages> GetAll()
         {
             var messages = new List<Messages>();
 
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
-
-            string query = "SELECT id, sender_id, receiver_id, message_text, message_time FROM messages ORDER BY message_time ASC";
-            using var command = new NpgsqlCommand(query, connection);
-            using var reader = command.ExecuteReader();
-
-            while (reader.Read())
+            try
             {
-                messages.Add(new Messages
-                {
-                    id_message = reader.GetInt32(0),
-                    id_user_sender = reader.GetInt32(1),
-                    id_user_receiver = reader.GetInt32(2),
-                    content = reader.GetString(3),
-                    send_date = reader.GetDateTime(4)
-                });
-            }
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
 
-            return messages;
+                string query = "SELECT id, sender_id, receiver_id, message_text, message_time FROM messages ORDER BY message_time ASC";
+                using var command = new NpgsqlCommand(query, connection);
+                using var reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    messages.Add(new Messages
+                    {
+                        id_message = reader.GetInt32("id"),
+                        id_user_sender = reader.GetInt32("sender_id"),
+                        id_user_receiver = reader.GetInt32("receiver_id"),
+                        content = reader.GetString("message_text"),
+                        send_date = reader.GetDateTime("message_time")
+                    });
+                }
+
+                return messages;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener todos los mensajes de la base de datos: {ex.Message}", ex);
+            }
         }
 
         public List<Messages> GetMessagesBetweenUsers(int userId1, int userId2)
         {
             var messages = new List<Messages>();
 
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
-
-            string query = @"
-                SELECT id, sender_id, receiver_id, message_text, message_time
-                FROM messages
-                WHERE (sender_id = @user1 AND receiver_id = @user2)
-                   OR (sender_id = @user2 AND receiver_id = @user1)
-                ORDER BY message_time ASC";
-
-            using var command = new NpgsqlCommand(query, connection);
-            command.Parameters.AddWithValue("@user1", userId1);
-            command.Parameters.AddWithValue("@user2", userId2);
-
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
+            try
             {
-                messages.Add(new Messages
-                {
-                    id_message = reader.GetInt32(0),
-                    id_user_sender = reader.GetInt32(1),
-                    id_user_receiver = reader.GetInt32(2),
-                    content = reader.GetString(3),
-                    send_date = reader.GetDateTime(4)
-                });
-            }
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
 
-            return messages;
+                string query = @"
+                    SELECT id, sender_id, receiver_id, message_text, message_time
+                    FROM messages
+                    WHERE (sender_id = @user1 AND receiver_id = @user2)
+                       OR (sender_id = @user2 AND receiver_id = @user1)
+                    ORDER BY message_time ASC";
+
+                using var command = new NpgsqlCommand(query, connection);
+                command.Parameters.AddWithValue("@user1", userId1);
+                command.Parameters.AddWithValue("@user2", userId2);
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    messages.Add(new Messages
+                    {
+                        id_message = reader.GetInt32("id"),
+                        id_user_sender = reader.GetInt32("sender_id"),
+                        id_user_receiver = reader.GetInt32("receiver_id"),
+                        content = reader.GetString("message_text"),
+                        send_date = reader.GetDateTime("message_time")
+                    });
+                }
+
+                return messages;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener mensajes entre usuarios de la base de datos: {ex.Message}", ex);
+            }
         }
     }
 }
