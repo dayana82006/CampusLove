@@ -25,6 +25,7 @@ namespace CampusLove.Application.Services
 
             if (credits == null)
             {
+                // Primera vez del usuario, crear registro de créditos
                 var newCredits = new InteractionCredits
                 {
                     id_user = userId,
@@ -35,11 +36,13 @@ namespace CampusLove.Application.Services
                 return;
             }
 
+            // Si es un nuevo día, reiniciar créditos
             if (credits.last_update_date.Date < DateTime.UtcNow.Date)
             {
                 credits.available_credits = MaxDailyCredits;
                 credits.last_update_date = DateTime.UtcNow.Date;
                 _interactionCreditsRepository.Update(credits);
+                Console.WriteLine("🎁 ¡Tus créditos han sido renovados para hoy!");
             }
         }
 
@@ -56,39 +59,6 @@ namespace CampusLove.Application.Services
             {
                 credits.available_credits--;
                 _interactionCreditsRepository.Update(credits);
-            }
-        }
-
-        public void UpdateCreditsAfterInteraction(int userId, int targetUserId, string interactionType)
-        {
-            var interaction = new Interactions
-            {
-                id_user_origin = userId,
-                id_user_target = targetUserId,
-                interaction_type = interactionType,
-                interaction_date = DateTime.UtcNow
-            };
-
-            _interactionsRepository.Add(interaction);
-
-            int creditChange = 0;
-
-            switch (interactionType.ToLower())
-            {
-                case "like":
-                    creditChange = 1;
-                    break;
-                case "dislike":
-                    creditChange = -1;
-                    break;
-                default:
-                    creditChange = 0;
-                    break;
-            }
-
-            if (creditChange != 0)
-            {
-                _interactionCreditsRepository.UpdateCredits(userId, creditChange);
             }
         }
 
