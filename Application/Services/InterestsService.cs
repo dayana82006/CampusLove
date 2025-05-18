@@ -1,6 +1,6 @@
 using CampusLove.Domain.Entities;
 using CampusLove.Domain.Interfaces;
-using Npgsql; 
+
 using System.Collections.Generic;
 using System.Linq;
 

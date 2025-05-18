@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj": {}
+    "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\CampusLove.csproj": {}
   },
   "projects": {
-    "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj": {
+    "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\CampusLove.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj",
+        "projectUniqueName": "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\CampusLove.csproj",
         "projectName": "CampusLove",
-        "projectPath": "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj",
-        "packagesPath": "C:\\Users\\merli\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\obj\\",
+        "projectPath": "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\CampusLove.csproj",
+        "packagesPath": "C:\\Users\\Dayana\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\merli\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Dayana\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[2.1.66, )"
             },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.3.0, )"
+            },
             "Npgsql": {
               "target": "Package",
               "version": "[9.0.3, )"
@@ -68,7 +72,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.409/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

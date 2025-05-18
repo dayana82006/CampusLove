@@ -1,3 +1,5 @@
+using CampusLove.Application.UI.Admin.Countries;
+using CampusLove.Domain.Entities;
 using CampusLove.Domain.Interfaces;
 
 namespace CampusLove.Application.UI
@@ -40,6 +42,8 @@ namespace CampusLove.Application.UI
 
             while (!salir)
             {
+                Console.Clear();
+                MenuAdmin();
                 Console.WriteLine(Menu());
                 Console.Write("💗 Seleccione una opción 💗 : ");
                 int opcion = Utilidades.LeerOpcionMenuKey(Menu());
@@ -62,8 +66,8 @@ namespace CampusLove.Application.UI
                         // TODO: Manejo Ciudad
                         break;
                     case 6:
-                        // var uiCountry = new UIPais(_factory.CreateCountryRepository());
-                        // uiCountry.GestionPaises();
+                         var uiCountry = new UIPais(_factory);
+                        uiCountry.GestionPaises();
                         break;
                     case 7:
                         // TODO: Manejo Región

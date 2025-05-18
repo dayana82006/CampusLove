@@ -105,7 +105,7 @@ namespace CampusLove.Infrastructure.Repositories
             return null;
         }
 
-        public Countries GetCountryById(int id)
+        public Country GetCountryById(int id)
         {
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
@@ -116,10 +116,10 @@ namespace CampusLove.Infrastructure.Repositories
             using var reader = command.ExecuteReader();
             if (reader.Read())
             {
-                return new Countries
+                return new Country
                 {
                     id_country = reader.GetInt32(0),
-                    name_country = reader.GetString(1)
+                    country_name = reader.GetString(1)
                 };
             }
 
@@ -144,9 +144,9 @@ namespace CampusLove.Infrastructure.Repositories
             return address;
         }
 
-        public IEnumerable<Countries> GetAllCountries()
+        public IEnumerable<Country> GetAllCountries()
         {
-            var list = new List<Countries>();
+            var list = new List<Country>();
 
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
@@ -156,10 +156,10 @@ namespace CampusLove.Infrastructure.Repositories
 
             while (reader.Read())
             {
-                list.Add(new Countries
+                list.Add(new Country
                 {
                     id_country = reader.GetInt32(0),
-                    name_country = reader.GetString(1)
+                    country_name = reader.GetString(1)
                 });
             }
 
@@ -239,6 +239,11 @@ namespace CampusLove.Infrastructure.Repositories
             }
 
             return null;
+        }
+
+        IEnumerable<Country> IAddressesRepository.GetAllCountries()
+        {
+            throw new NotImplementedException();
         }
     }
 }
