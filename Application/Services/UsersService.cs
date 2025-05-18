@@ -41,7 +41,7 @@ namespace CampusLove.Application.Services
             Console.WriteLine("╭─────────────── Usuarios registrados ───────────────╮");
             foreach (var user in usuarios)
             {
-                Console.WriteLine($" ID: {user.id_user} | Nombre: {user.first_name}  {user.last_name} | Email: {user.email}");
+                Console.WriteLine($" ID: {user.id_user} | Nombre: {user.first_name} {user.last_name} | Email: {user.email}");
             }
             Console.WriteLine("╰────────────────────────────────────────────────────╯");
             Console.WriteLine("Presiona una tecla para continuar...");
