@@ -15,6 +15,7 @@ namespace CampusLove.Application.UI.User
         private readonly InteractionCreditsService _creditsService;
         private readonly MatchesService _matchesService;
         private readonly UserStatisticsService _userStatisticsService;
+        private readonly MessagesService _messagesService;
         private readonly dynamic _usuario;
 
         public UIUsers(
@@ -28,6 +29,7 @@ namespace CampusLove.Application.UI.User
             InteractionCreditsService creditsService,
             MatchesService matchesService,
             UserStatisticsService userStatisticsService,
+            MessagesService messagesService,
             dynamic usuario)
         {
             _userService = userService;
@@ -40,6 +42,7 @@ namespace CampusLove.Application.UI.User
             _creditsService = creditsService;
             _matchesService = matchesService;
             _userStatisticsService = userStatisticsService;
+            _messagesService = messagesService;
             _usuario = usuario;
         }
         
@@ -118,6 +121,7 @@ namespace CampusLove.Application.UI.User
                             _gendersService,
                             _careersService,
                             _addressesService,
+                            _messagesService,
                             _usuario);
                         matchViewer.DisplayMatches();
                         break;

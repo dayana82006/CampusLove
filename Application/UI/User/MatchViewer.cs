@@ -16,6 +16,8 @@ namespace CampusLove.Application.UI.User
         private readonly GendersService _gendersService;
         private readonly CareersService _careersService;
         private readonly AddressesService _addressesService;
+        private readonly MessagesService _messagesService;
+
         private readonly dynamic _currentUser;
 
         public MatchViewer(
@@ -27,6 +29,7 @@ namespace CampusLove.Application.UI.User
             GendersService gendersService,
             CareersService careersService,
             AddressesService addressesService,
+            MessagesService messagesService,
             dynamic currentUser)
         {
             _userService = userService;
@@ -38,6 +41,7 @@ namespace CampusLove.Application.UI.User
             _careersService = careersService;
             _addressesService = addressesService;
             _currentUser = currentUser;
+            _messagesService = messagesService;
         }
 
         public void DisplayMatches()
@@ -77,12 +81,12 @@ namespace CampusLove.Application.UI.User
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("\t ♥ ¸.•*¨*•♫♪♥ MIS COINCIDENCIAS ♥ ♪♫•*¨*•.¸ ♥");
                 Console.ResetColor();
-                
+
                 Users matchedUser = matchedUsers[index];
                 ShowMatchedUserProfile(matchedUser);
 
                 DateTime matchDate = GetMatchDate((int)_currentUser.id_user, matchedUser.id_user);
-                
+
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"\n\t🔢 Mostrando coincidencia {index + 1} de {matchedUsers.Count}");
                 Console.WriteLine($"\t📅 Fecha del match: {matchDate.ToString("dd/MM/yyyy HH:mm")}");
@@ -92,6 +96,7 @@ namespace CampusLove.Application.UI.User
 ¿Qué deseas hacer?
     [N] Siguiente
     [P] Anterior
+    [M] Ver/enviar mensajes
     [D] Eliminar coincidencia (cambiar a dislike)
     [S] Salir
 ");
@@ -111,16 +116,16 @@ namespace CampusLove.Application.UI.User
 
                         Console.WriteLine($"¿Estás seguro que deseas eliminar la coincidencia con {matchedUser.first_name}? (S/N)");
                         var confirm = Console.ReadLine()?.Trim().ToUpper();
-                        
+
                         if (confirm == "S")
                         {
                             try
                             {
                                 _interactionsService.RegisterInteraction((int)_currentUser.id_user, matchedUser.id_user, "dislike");
                                 Console.WriteLine($"💔 Has eliminado la coincidencia con {matchedUser.first_name}.");
-                                
+
                                 matchedUsers = GetMatchedUsers((int)_currentUser.id_user);
-                                
+
                                 if (matchedUsers.Count == 0)
                                 {
                                     Console.WriteLine("Ya no tienes coincidencias. ¡Sigue explorando!");
@@ -128,7 +133,7 @@ namespace CampusLove.Application.UI.User
                                     Console.ReadKey();
                                     return;
                                 }
-                                
+
                                 if (index >= matchedUsers.Count)
                                 {
                                     index = matchedUsers.Count - 1;
@@ -140,7 +145,9 @@ namespace CampusLove.Application.UI.User
                             }
                         }
                         break;
-
+                    case "M":
+                        _messagesService.VisualizarMensajes((int)_currentUser.id_user, matchedUser.id_user);
+                        break;
                     case "S":
                         return;
 
@@ -155,7 +162,7 @@ namespace CampusLove.Application.UI.User
         {
             var allMatches = _matchesService.GetAllMatches();
             var (minId, maxId) = userId1 < userId2 ? (userId1, userId2) : (userId2, userId1);
-            
+
             var match = allMatches.FirstOrDefault(m => m.id_user1 == minId && m.id_user2 == maxId);
             return match?.match_date ?? DateTime.Now;
         }
@@ -164,7 +171,7 @@ namespace CampusLove.Application.UI.User
         {
             List<Users> matchedUsers = new List<Users>();
             var allUsers = _userService.ObtenerTodos();
-            
+
             foreach (var user in allUsers)
             {
                 if (user.id_user != currentUserId && _matchesService.IsMatch(currentUserId, user.id_user))
@@ -175,7 +182,7 @@ namespace CampusLove.Application.UI.User
                     }
                 }
             }
-            
+
             return matchedUsers;
         }
 
@@ -231,5 +238,6 @@ namespace CampusLove.Application.UI.User
             if (birthDate.Date > today.AddYears(-age)) age--;
             return age;
         }
+        
     }
 }

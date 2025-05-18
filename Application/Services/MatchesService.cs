@@ -10,13 +10,16 @@ namespace CampusLove.Application.Services
     {
         private readonly IMatchesRepository _matchesRepository;
         private readonly IInteractionsRepository _interactionsRepository;
+        private readonly MessagesService _messagesService;
 
         public MatchesService(
             IMatchesRepository matchesRepository,
-            IInteractionsRepository interactionsRepository)
+            IInteractionsRepository interactionsRepository,
+            MessagesService messagesService)
         {
             _matchesRepository = matchesRepository;
             _interactionsRepository = interactionsRepository;
+            _messagesService = messagesService;
         }
 
         public bool CreateMatch(int userId1, int userId2)

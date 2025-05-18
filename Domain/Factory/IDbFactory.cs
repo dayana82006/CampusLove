@@ -17,6 +17,7 @@ namespace CampusLove.Domain.Interfaces
         IInteractionsCreditsRepository CreateInteractionCreditsRepository();
         IMatchesRepository CreateMatchesRepository();
         IUserStatisticsRepository CreateUserStatisticsRepository();
+        IMessagesRepository CreateMessagesRepository();
    
     }
 } 

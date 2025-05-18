@@ -58,8 +58,9 @@ internal class Program
             interactionCreditsService,
             userStatisticsService 
         );
-
-            var matchesService = new MatchesService(matchesRepo, interactionsRepo);
+            var messagesRepo = factory.CreateMessagesRepository();
+            var messagesService = new MessagesService(messagesRepo);
+            var matchesService = new MatchesService(matchesRepo, interactionsRepo, messagesService);
 
             var loginUI = new LoginUI(
             authService,
@@ -72,6 +73,7 @@ internal class Program
             interactionsService,
             interactionCreditsService,
             matchesService,
+            messagesService,
             userStatisticsService
         );
             loginUI.MostrarMenu();
