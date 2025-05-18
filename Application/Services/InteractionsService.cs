@@ -28,28 +28,41 @@ namespace CampusLove.Application.Services
                     .GetAll()
                     .FirstOrDefault(i => i.id_user_origin == userId && i.id_user_target == targetUserId);
 
+                // Si la interacción es un like, primero verificar si hay créditos suficientes
+                if (interactionType == "like")
+                {
+                    // Solo verificar créditos si:
+                    // 1. No existe interacción previa, o
+                    // 2. Existe una interacción pero es de tipo dislike (cambio de dislike a like)
+                    bool needsCredit = existingInteraction == null || 
+                                      (existingInteraction != null && existingInteraction.interaction_type == "dislike");
+                    
+                    if (needsCredit)
+                    {
+                        int availableCredits = _creditsService.GetAvailableCredits(userId);
+                        if (availableCredits <= 0)
+                        {
+                            Console.WriteLine("⚠️ No te quedan créditos para dar likes hoy. Regresa mañana.");
+                            return false;
+                        }
+                    }
+                }
+
+                // Proceso según si existe o no una interacción previa
                 if (existingInteraction != null)
                 {
-                    // Ya existe una interacción previa
+                    // Ya existe una interacción previa, verificar si es del mismo tipo
                     if (existingInteraction.interaction_type == interactionType)
                     {
                         // Mismo tipo - no hacer nada
-                        Console.WriteLine($"⚠️ Ya diste {interactionType} a este usuario anteriormente. No se modifican créditos.");
+                        Console.WriteLine($"⚠️ Ya diste {interactionType} a este usuario. No se modifican créditos.");
                         return false;
                     }
 
                     // Cambio de tipo de interacción
                     if (interactionType == "like")
                     {
-                        // Verificamos créditos disponibles para cambiar a like
-                        int availableCredits = _creditsService.GetAvailableCredits(userId);
-                        if (availableCredits <= 0)
-                        {
-                            Console.WriteLine("⚠️ No te quedan créditos para dar likes hoy.");
-                            return false;
-                        }
-
-                        // Actualizar la interacción existente
+                        // Cambio de dislike a like: se descuenta crédito
                         existingInteraction.interaction_type = "like";
                         existingInteraction.interaction_date = DateTime.Today; // Actualizar fecha
                         _interactionsRepository.Update(existingInteraction);
@@ -60,36 +73,29 @@ namespace CampusLove.Application.Services
                     }
                     else if (interactionType == "dislike")
                     {
-                        // Cambiar de like a dislike
+                        // Cambio de like a dislike: no se afectan créditos
                         existingInteraction.interaction_type = "dislike";
                         existingInteraction.interaction_date = DateTime.Today; // Actualizar fecha
                         _interactionsRepository.Update(existingInteraction);
 
-                        Console.WriteLine("👎 Cambiaste de like a dislike. No se modifican créditos.");
+                        Console.WriteLine("👎 Cambiaste de like a dislike. No se devuelven créditos.");
                         return false;
                     }
                 }
                 else
                 {
                     // No existía interacción previa
+                    var newInteraction = new Interactions
+                    {
+                        id_user_origin = userId,
+                        id_user_target = targetUserId,
+                        interaction_type = interactionType,
+                        interaction_date = DateTime.Today
+                    };
+                    
                     if (interactionType == "like")
                     {
-                        int availableCredits = _creditsService.GetAvailableCredits(userId);
-                        if (availableCredits <= 0)
-                        {
-                            Console.WriteLine("⚠️ No te quedan créditos para dar likes hoy.");
-                            return false;
-                        }
-
-                        // Crear nueva interacción
-                        var newInteraction = new Interactions
-                        {
-                            id_user_origin = userId,
-                            id_user_target = targetUserId,
-                            interaction_type = "like",
-                            interaction_date = DateTime.Today
-                        };
-                        
+                        // Nuevo like: descontar crédito
                         _interactionsRepository.Add(newInteraction);
                         _creditsService.DecrementCredit(userId);
 
@@ -98,17 +104,8 @@ namespace CampusLove.Application.Services
                     }
                     else if (interactionType == "dislike")
                     {
-                        // Crear nueva interacción de dislike
-                        var newInteraction = new Interactions
-                        {
-                            id_user_origin = userId,
-                            id_user_target = targetUserId,
-                            interaction_type = "dislike",
-                            interaction_date = DateTime.Today
-                        };
-                        
+                        // Nuevo dislike: no afecta créditos
                         _interactionsRepository.Add(newInteraction);
-
                         Console.WriteLine("👎 Dislike registrado. No se descuentan créditos.");
                         return false;
                     }
