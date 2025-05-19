@@ -63,7 +63,7 @@ namespace CampusLove.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public void Create(Country entity)
+    public void Create(Country entity)
 {
     using var connection = new NpgsqlConnection(_connectionString);
     connection.Open();

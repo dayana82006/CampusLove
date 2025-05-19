@@ -1,3 +1,5 @@
+using CampusLove.Domain.Ports;
+
 namespace CampusLove.Domain.Interfaces
 {
     public interface IDbFactory
@@ -14,5 +16,6 @@ namespace CampusLove.Domain.Interfaces
         ICountryRepository CreateCountryRepository();
         IStatesRepository CreateStatesRepository();
         ICitiesRepository CreateCitiesRepository();
+        ICategoryRepository CreateCategoryRepository();
     }
 }

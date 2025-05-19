@@ -18,8 +18,8 @@ namespace CampusLove.Application.UI.Admin.City
             var cityRepo = factory.CreateCitiesRepository();
             var stateRepo = factory.CreateStatesRepository();
 
-            _servicio = new CityService(cityRepo, stateRepo); // Pasa ambos
-            _stateService = new StateService(stateRepo);      // Esto sigue igual
+            _servicio = new CityService(cityRepo, stateRepo); 
+            _stateService = new StateService(stateRepo);      
         }
 
 

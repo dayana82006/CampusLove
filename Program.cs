@@ -41,7 +41,7 @@ internal class Program
 
             var careersService = new CareersService(careerRepo);
             var addressesService = new AddressesService(addressRepo, connStr);
-            var interestsService = new InterestsService(interestsRepo, connStr);
+            var interestsService = new InterestsService(interestsRepo , factory.CreateCategoryRepository());
             var usersInterestsService = new UsersInterestsService(usersInterestsRepo);
             var authService = new AuthService(userRepo);
             var userService = new UserService(userRepo, interactionsCreditsRepo, interactionsRepo, matchesRepo);
