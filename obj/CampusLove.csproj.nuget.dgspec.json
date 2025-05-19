@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\CampusLove.csproj": {}
   },
   "projects": {
@@ -12,6 +13,19 @@
         "projectPath": "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\CampusLove.csproj",
         "packagesPath": "C:\\Users\\Dayana\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\obj\\",
+=======
+    "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj",
+        "projectName": "CampusLove",
+        "projectPath": "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj",
+        "packagesPath": "C:\\Users\\merli\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\obj\\",
+>>>>>>> b9a09a6ad589636af32354094a805d4d80421b32
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Dayana\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -43,9 +57,17 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.66, )"
+            },
             "MySql.Data": {
               "target": "Package",
               "version": "[9.3.0, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[9.0.3, )"
             }
           },
           "imports": [
@@ -64,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.409/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

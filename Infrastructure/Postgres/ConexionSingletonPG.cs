@@ -1,13 +1,13 @@
 using System;
-using MySql.Data.MySqlClient;
+using Npgsql;
 
-namespace MiAppHexagonal.Infrastructure.Mysql;
+namespace CampusLove.Infrastructure.Pgsql;
 
 public class ConexionSingleton
 {
     private static ConexionSingleton? _instancia;
     private readonly string _connectionString;
-    private MySqlConnection? _conexion;
+    private NpgsqlConnection? _conexion;
 
     private ConexionSingleton(string connectionString)
     {
@@ -20,9 +20,9 @@ public class ConexionSingleton
         return _instancia;
     }
 
-    public MySqlConnection ObtenerConexion()
+    public NpgsqlConnection ObtenerConexion()
     {
-        _conexion ??= new MySqlConnection(_connectionString);
+        _conexion ??= new NpgsqlConnection(_connectionString);
 
         if (_conexion.State != System.Data.ConnectionState.Open)
             _conexion.Open();

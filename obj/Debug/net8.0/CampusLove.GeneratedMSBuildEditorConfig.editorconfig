@@ -8,6 +8,10 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CampusLove
+<<<<<<< HEAD
 build_property.ProjectDir = C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\
+=======
+build_property.ProjectDir = C:\Users\merli\Downloads\CampusLove\CampusLove\
+>>>>>>> b9a09a6ad589636af32354094a805d4d80421b32
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
