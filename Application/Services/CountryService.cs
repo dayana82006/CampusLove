@@ -25,8 +25,12 @@ namespace CampusLove.Application.Services
                 Console.WriteLine("📭 No countries registered.");
                 return;
             }
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n╔══════════════════════════════════════╗");
+            Console.WriteLine("║          🌍 LISTA DE PAÍSES           ║");
+            Console.WriteLine("╚══════════════════════════════════════╝");
+            Console.ResetColor();
 
-            Console.WriteLine("\n--- List of Countries ---");
             foreach (var country in countries)
             {
                 Console.WriteLine($"ID: {country.id_country}, Name: {country.country_name}");
@@ -55,7 +59,7 @@ namespace CampusLove.Application.Services
                 return false;
             }
 
-            country.country_name= name.Trim();
+            country.country_name = name.Trim();
             _repo.Update(country);
 
             return true;

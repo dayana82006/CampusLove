@@ -56,5 +56,33 @@ namespace CampusLove.Domain.Interfaces
 
             return null;
         }
+        public void Create(Careers career)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            var command = new NpgsqlCommand("INSERT INTO careers (career_name) VALUES (@career_name)", connection);
+            command.Parameters.AddWithValue("@career_name", career.career_name);
+            command.ExecuteNonQuery();
+        }
+        public void Update(Careers career)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            var command = new NpgsqlCommand("UPDATE careers SET career_name = @career_name WHERE id_career = @id", connection);
+            command.Parameters.AddWithValue("@career_name", career.career_name);
+            command.Parameters.AddWithValue("@id", career.id_career);
+            command.ExecuteNonQuery();
+        }
+        public void Delete(int id)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            var command = new NpgsqlCommand("DELETE FROM careers WHERE id_career = @id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            command.ExecuteNonQuery();
+        }
     }
 }

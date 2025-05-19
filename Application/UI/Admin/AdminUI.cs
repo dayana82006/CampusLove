@@ -1,7 +1,7 @@
 using CampusLove.Application.Services;
 using CampusLove.Application.UI.Admin.City;
 using CampusLove.Application.UI.Admin.Countries;
-using CampusLove.Application.UI.Admin.State;
+using CampusLove.Application.UI.Admin.Career;
 using CampusLove.Application.UI.Admin.Users;
 using CampusLove.Domain.Interfaces;
 
@@ -54,8 +54,9 @@ namespace CampusLove.Application.UI
                         EjecutarManejoUsuarios();
                         break;
                     case 2:
-                        Console.WriteLine("🚧 Opción en desarrollo. Pronto disponible.");
-                        Console.ReadKey();
+                        var uiCareer = new UICareer(_factory);
+                        uiCareer.GestionarCareers();
+                        
                         break;
                     case 3:
                         Console.WriteLine("🚧 Opción en desarrollo. Pronto disponible.");
