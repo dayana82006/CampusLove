@@ -42,7 +42,7 @@ namespace CampusLove.Infrastructure.Repositories
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
-            var command = new NpgsqlCommand("SELECT id_country, country_name FROM countries WHERE id_country = @id", connection);
+            var command = new NpgsqlCommand("SELECT id_country, country_name FROM Countries WHERE id_country = @id", connection);
             command.Parameters.AddWithValue("@id", id);
 
             using var reader = command.ExecuteReader();
@@ -68,7 +68,7 @@ namespace CampusLove.Infrastructure.Repositories
     using var connection = new NpgsqlConnection(_connectionString);
     connection.Open();
 
-    var query = "INSERT INTO countries (country_name) VALUES (@country_name)";
+    var query = "INSERT INTO Countries (country_name) VALUES (@country_name)";
     using var command = new NpgsqlCommand(query, connection);
     command.Parameters.AddWithValue("@country_name", entity.country_name);
 
@@ -80,7 +80,7 @@ public void Update(Country entity)
     using var connection = new NpgsqlConnection(_connectionString);
     connection.Open();
 
-    var query = "UPDATE countries SET country_name = @country_name WHERE id_country = @id_country";
+    var query = "UPDATE Countries SET country_name = @country_name WHERE id_country = @id_country";
     using var command = new NpgsqlCommand(query, connection);
     command.Parameters.AddWithValue("@country_name", entity.country_name);
     command.Parameters.AddWithValue("@id_country", entity.id_country);
@@ -93,7 +93,7 @@ public void Delete(int id)
     using var connection = new NpgsqlConnection(_connectionString);
     connection.Open();
 
-    var query = "DELETE FROM countries WHERE id_country = @id_country";
+    var query = "DELETE FROM Countries WHERE id_country = @id_country";
     using var command = new NpgsqlCommand(query, connection);
     command.Parameters.AddWithValue("@id_country", id);
 

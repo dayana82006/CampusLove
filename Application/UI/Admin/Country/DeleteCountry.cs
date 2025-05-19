@@ -24,7 +24,7 @@ namespace CampusLove.Application.UI.Admin.Countries
                 return;
             }
 
-            _servicio.DeleteCountry(id); // Ya contiene validación interna
+            
         }
     }
 }

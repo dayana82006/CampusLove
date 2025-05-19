@@ -1,5 +1,6 @@
 using CampusLove.Application.Services;
 using CampusLove.Application.UI.Admin.Countries;
+using CampusLove.Application.UI.Admin.State;
 using CampusLove.Application.UI.Admin.Users;
 using CampusLove.Domain.Interfaces;
 
@@ -25,7 +26,7 @@ namespace CampusLove.Application.UI
                    "4. 🏠 Manejo Dirección\n" +
                    "5. 🌆 Manejo Ciudad\n" +
                    "6. 🌍 Manejo País\n" +
-                   "7. 🗺️ Manejo Región\n" +
+                   "7. 🗺️ Manejo Estado\n" +
                    "8. 👥 Manejo Género\n" +
                    "0. 🚪 Salir\n";
         }
@@ -70,8 +71,6 @@ namespace CampusLove.Application.UI
                         uiUser.GestionUsers();
                         break;
 
-
-
                     case 2:
                         // TODO: Manejo Carreras
                         break;
@@ -89,7 +88,8 @@ namespace CampusLove.Application.UI
                         uiCountry.GestionPaises();
                         break;
                     case 7:
-                        // TODO: Manejo Región
+                        var uiState = new UIState(_factory);
+                        uiState.GestionarStates();
                         break;
                     case 8:
                         // TODO: Manejo Género

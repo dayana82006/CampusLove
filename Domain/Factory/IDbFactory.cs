@@ -1,21 +1,17 @@
-using CampusLove.Domain.Entities;
-
 namespace CampusLove.Domain.Interfaces
 {
     public interface IDbFactory
     {
-        ICountryRepository CreateCountryRepository();
-
         IUsersRepository CreateUsersRepository();
-        IAddressesRepository CreateAddressesRepository();
-        ICareersRepository CreateCareersRepository();
         IGendersRepository CreateGendersRepository();
-
+        ICareersRepository CreateCareersRepository();
+        IAddressesRepository CreateAddressesRepository();
         IInterestsRepository CreateInterestsRepository();
         IUsersInterestsRepository CreateUsersInterestsRepository();
-        IInteractionsRepository CreateInteractionsRepository();
         IInteractionsCreditsRepository CreateInteractionCreditsRepository();
         IMatchesRepository CreateMatchesRepository();
-   
+        IInteractionsRepository CreateInteractionsRepository();
+        ICountryRepository CreateCountryRepository();
+        IStatesRepository CreateStatesRepository();
     }
-} 
+}
