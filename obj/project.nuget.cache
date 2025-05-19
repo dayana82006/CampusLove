@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2zGRrOiX2ik=",
+  "dgSpecHash": "/77vcZcvDzA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj",
+  "projectFilePath": "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\merli\\.nuget\\packages\\dapper\\2.1.66\\dapper.2.1.66.nupkg.sha512",
     "C:\\Users\\merli\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",

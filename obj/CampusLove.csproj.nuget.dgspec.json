@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj": {}
+    "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj": {}
   },
   "projects": {
-    "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj": {
+    "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj",
+        "projectUniqueName": "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj",
         "projectName": "CampusLove",
-        "projectPath": "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\CampusLove.csproj",
+        "projectPath": "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj",
         "packagesPath": "C:\\Users\\merli\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\merli\\Downloads\\LoveCampus\\CampusLove\\obj\\",
+        "outputPath": "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\merli\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -42,9 +42,13 @@ Se incluyen diagramas UML (clases, DER, modelos lógico/físico) que apoyan la d
 - Ejecuta [Database/Inserts.sql](Database/Inserts.sql) para cargar los datos iniciales.
 
 ## Diagramas UML
-- Diagrama de clases [Docs/](Docs/)
-- Diagrama DER [Docs/](Docs/)
-- Modelo lógico [Docs/](Docs/)
-- Modelo físico [Docs/](Docs/)
+- Diagrama de clases 
+    ![alt text](<DiagramaClases.png>)
+- Diagrama DER 
+    ![alt text](<DiagramaDER.png>)
+- Modelo lógico 
+    ![alt text](<ModeloLogico.png>)
+- Modelo físico 
+    ![alt text](<ModeloFisico.png>)
 ---
 
