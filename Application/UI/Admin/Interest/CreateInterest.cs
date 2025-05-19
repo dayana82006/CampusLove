@@ -14,18 +14,48 @@ public class CreateInterest
 
     public void Ejecutar()
     {
-        var interest = new Interests();
+        Console.Clear();
 
-        Console.Write("Nombre del interés: ");
-        interest.interest_name = Console.ReadLine()?.Trim();
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("📚 CATEGORÍAS DISPONIBLES:");
+        Console.ResetColor();
 
-        if (string.IsNullOrWhiteSpace(interest.interest_name))
+        var categories = _service.GetAllInterestsCategory();
+        foreach (var category in categories)
+        {
+            Console.WriteLine($"[{category.id_category}] - {category.interest_category}");
+        }
+
+        Console.Write("\n📝 Nombre del interés: ");
+        var interestName = Console.ReadLine()?.Trim();
+
+        if (string.IsNullOrWhiteSpace(interestName))
         {
             Console.WriteLine("❌ El nombre no puede estar vacío.");
             return;
         }
 
-        _service.Create(interest);
-        Console.WriteLine($"✅ Interés '{interest.interest_name}' creado con éxito.");
+        Console.Write("📂 Ingrese el ID de la categoría: ");
+        if (!int.TryParse(Console.ReadLine(), out int categoryId))
+        {
+            Console.WriteLine("❌ El ID de categoría no es válido.");
+            return;
+        }
+
+        var interest = new Interests
+        {
+            interest_name = interestName,
+            id_category = categoryId
+        };
+
+        try
+        {
+            _service.Create(interest);
+            Console.WriteLine($"✅ Interés '{interest.interest_name}' creado con éxito.");
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"❌ Error: {ex.Message}");
+        }
     }
 }

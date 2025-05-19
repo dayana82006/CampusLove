@@ -1,17 +1,21 @@
+using CampusLove.Application.Services;
+using CampusLove.Application.UI.Admin.City;
+using CampusLove.Application.UI.Admin.Countries;
+using CampusLove.Application.UI.Admin.Career;
+using CampusLove.Application.UI.Admin.Users;
 using CampusLove.Domain.Interfaces;
+using CampusLove.Application.UI.Admin.Interest;
 
 namespace CampusLove.Application.UI
 {
     public class AdminUI
     {
         private readonly IDbFactory _factory;
-        private IDbFactory factory;
 
         public AdminUI(IDbFactory factory)
         {
             _factory = factory;
         }
-
 
         public static string Menu()
         {
@@ -21,7 +25,7 @@ namespace CampusLove.Application.UI
                    "4. 🏠 Manejo Dirección\n" +
                    "5. 🌆 Manejo Ciudad\n" +
                    "6. 🌍 Manejo País\n" +
-                   "7. 🗺️ Manejo Región\n" +
+                   "7. 🗺️ Manejo Estado\n" +
                    "8. 👥 Manejo Género\n" +
                    "0. 🚪 Salir\n";
         }
@@ -31,8 +35,8 @@ namespace CampusLove.Application.UI
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("⋆｡ﾟ☁︎｡⋆｡ ﾟ☾ ﾟ｡⋆｡ﾟ☁︎｡⋆｡  ﾟ｡⋆｡⋆｡ ﾟ☾｡☁︎｡⋆｡ ﾟ☾☾｡⋆｡ ");
-            Console.WriteLine("      💌 C A M P U S   L O V E 💌");
-            Console.WriteLine("       ❝ BIENVENIDO ADMINISTRADOR ❞");
+            Console.WriteLine("     💌 C A M P U S   L O V E 💌");
+            Console.WriteLine("     ❝ BIENVENIDO ADMINISTRADOR ❞");
             Console.WriteLine("⋆｡ﾟ☁︎｡⋆｡ ﾟ☾ ﾟ｡⋆☁︎｡⋆｡ ﾟ☾｡ ﾟ☁︎｡⋆｡ ﾟ☾ ﾟ｡⋆｡ ﾟ｡ﾟ☁︎｡⋆\n");
             Console.ResetColor();
 
@@ -40,6 +44,7 @@ namespace CampusLove.Application.UI
 
             while (!salir)
             {
+                Console.Clear();
                 Console.WriteLine(Menu());
                 Console.Write("💗 Seleccione una opción 💗 : ");
                 int opcion = Utilidades.LeerOpcionMenuKey(Menu());
@@ -47,34 +52,41 @@ namespace CampusLove.Application.UI
                 switch (opcion)
                 {
                     case 1:
-                        // TODO: Manejo Usuarios
+                        EjecutarManejoUsuarios();
                         break;
                     case 2:
-                        // TODO: Manejo Carreras
+                        var uiCareer = new UICareer(_factory);
+                        uiCareer.GestionarCareers();
+                        
                         break;
                     case 3:
-                        var uiInterest = new UIInterest(_factory.CreateInterestsRepository());
+                        var uiInterest = new UIInterest(_factory);
                         uiInterest.Ejecutar();
+                        
                         break;
                     case 4:
-                        // TODO: Manejo Dirección
+                        Console.WriteLine("🚧 Opción en desarrollo. Pronto disponible.");
+                        Console.ReadKey();
                         break;
                     case 5:
-                        // TODO: Manejo Ciudad
+                        var uiCity = new UICity(_factory);
+                        uiCity.GestionarCities();
                         break;
                     case 6:
-                        var uiCountry = new UICount(_factory.CreateCountryRepository());
+                        var uiCountry = new UICountry(_factory);
                         uiCountry.GestionPaises();
                         break;
                     case 7:
-                        // TODO: Manejo Región
+                        var uiState = new UIState(_factory);
+                        uiState.GestionarStates();
                         break;
                     case 8:
-                        // TODO: Manejo Género
+                        Console.WriteLine("🚧 Opción en desarrollo. Pronto disponible.");
+                        Console.ReadKey();
                         break;
                     case 0:
                         Console.Write("\n¿Está seguro que desea salir? 🥺 (S/N): ");
-                        salir = Utilidades.LeerTecla();
+                        salir = Utilidades.LeerTecla(); // Debe devolver true si confirma salir
                         if (salir)
                         {
                             Console.Clear();
@@ -83,9 +95,31 @@ namespace CampusLove.Application.UI
                         break;
                     default:
                         Console.WriteLine("⚠️ Opción no válida. ⚠️");
+                        Console.ReadKey();
                         break;
                 }
             }
+        }
+
+        private void EjecutarManejoUsuarios()
+        {
+            var userRepo = _factory.CreateUsersRepository();
+            var creditsRepo = _factory.CreateInteractionCreditsRepository();
+            var interactionsRepo = _factory.CreateInteractionsRepository();
+            var matchesRepo = _factory.CreateMatchesRepository();
+
+            var userService = new UserService(userRepo, creditsRepo, interactionsRepo, matchesRepo);
+            var genderService = new GendersService(_factory.CreateGendersRepository());
+            var careerService = new CareersService(_factory.CreateCareersRepository());
+            var connStr = "Host=localhost;Username=postgres;Password=1234;Database=CampusLove"; // Ejemplo
+
+            var addressService = new AddressesService(
+                _factory.CreateAddressesRepository(),
+                connStr
+            );
+
+            var uiUser = new UIManageusers(_factory, userService, genderService, careerService, addressService);
+            uiUser.GestionUsers();
         }
     }
 }

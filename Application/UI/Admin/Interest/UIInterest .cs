@@ -31,7 +31,7 @@ public class UIInterest
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(" ⤜♡→ 1. Ver todos los intereses 🏷️");
-            Console.WriteLine(" ⤜♡→ 2. Agrega;r un interés nuevo 🏗️");
+            Console.WriteLine(" ⤜♡→ 2. Agregar un interés nuevo 🏗️");
             Console.WriteLine(" ⤜♡→ 3. Actualizar un interés ✏️");
             Console.WriteLine(" ⤜♡→ 4. Eliminar un interés ❌");
             Console.WriteLine(" ⤜♡→ 5. Categorias de intereses 📂");

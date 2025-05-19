@@ -23,7 +23,7 @@ public class PgsqlCategoryRepository : ICategoryRepository
         using var connection = new NpgsqlConnection(_connectionString);
         connection.Open();
 
-        var command = new NpgsqlCommand("SELECT id_category, interest_category FROM InterestCategory", connection);
+        var command = new NpgsqlCommand("SELECT id_category, interest_category FROM InterestsCategory", connection);
         using var reader = command.ExecuteReader();
 
         while (reader.Read())
@@ -41,7 +41,7 @@ public class PgsqlCategoryRepository : ICategoryRepository
     {
         using var connection = new NpgsqlConnection(_connectionString);
         connection.Open();
-        var command = new NpgsqlCommand("INSERT INTO InterestCategory (interest_category) VALUES (@interest_category)", connection);
+        var command = new NpgsqlCommand("INSERT INTO InterestsCategory (interest_category) VALUES (@interest_category)", connection);
         command.Parameters.AddWithValue("@interest_category", entity.interest_category);
         command.ExecuteNonQuery();
 
@@ -52,7 +52,7 @@ public class PgsqlCategoryRepository : ICategoryRepository
        using var connection = new NpgsqlConnection(_connectionString);
         connection.Open();
 
-        var command = new NpgsqlCommand("DELETE FROM InterestCategory WHERE id_category = @id", connection);
+        var command = new NpgsqlCommand("DELETE FROM InterestsCategory WHERE id_category = @id", connection);
         command.Parameters.AddWithValue("@id", id);
 
         command.ExecuteNonQuery();
@@ -64,7 +64,7 @@ public class PgsqlCategoryRepository : ICategoryRepository
        using var connection = new NpgsqlConnection(_connectionString);
         connection.Open();
 
-        var command = new NpgsqlCommand("SELECT id_category, interest_category FROM InterestCategory WHERE id_category = @id", connection);
+        var command = new NpgsqlCommand("SELECT id_category, interest_category FROM InterestsCategory WHERE id_category = @id", connection);
         command.Parameters.AddWithValue("@id", id);
 
         using var reader = command.ExecuteReader();
@@ -90,7 +90,7 @@ public class PgsqlCategoryRepository : ICategoryRepository
         using var connection = new NpgsqlConnection(_connectionString);
         connection.Open();
 
-        var command = new NpgsqlCommand("UPDATE InterestCategory SET interest_category = @interest_category WHERE id_category = @id", connection);
+        var command = new NpgsqlCommand("UPDATE InterestsCategory SET interest_category = @interest_category WHERE id_category = @id", connection);
         command.Parameters.AddWithValue("@interest_category", entity.interest_category);
         command.Parameters.AddWithValue("@id", entity.id_category);
 
