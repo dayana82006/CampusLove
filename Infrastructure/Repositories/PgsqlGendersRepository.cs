@@ -57,5 +57,36 @@ namespace CampusLove.Domain.Interfaces
 
             return null;
         }
+
+        public void Create(Genders entity)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            var command = new NpgsqlCommand("INSERT INTO Genders (genre_name) VALUES (@genre_name)", connection);
+            command.Parameters.AddWithValue("@genre_name", entity.genre_name);
+            command.ExecuteNonQuery();
+        }
+
+        public void Update(Genders entity)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            var command = new NpgsqlCommand("UPDATE Genders SET genre_name = @genre_name WHERE id_}gender = @id", connection);
+            command.Parameters.AddWithValue("@genre_name", entity.genre_name);
+            command.Parameters.AddWithValue("@id", entity.id_gender);
+            command.ExecuteNonQuery();  
+        }
+
+        public void Delete(int id)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            var command = new NpgsqlCommand("DELETE FROM Genders WHERE id_gender = @id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            command.ExecuteNonQuery();
+        }
     }
 }

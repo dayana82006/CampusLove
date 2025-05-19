@@ -36,8 +36,8 @@ namespace CampusLove.Application.Services
             if (state != null && !string.IsNullOrWhiteSpace(state.state_name))
                 parts.Add(state.state_name);
 
-            if (country != null && !string.IsNullOrWhiteSpace(country.name_country))
-                parts.Add(country.name_country);
+            if (country != null && !string.IsNullOrWhiteSpace(country.country_name))
+                parts.Add(country.country_name);
 
             return string.Join(", ", parts);
         }
@@ -58,7 +58,7 @@ namespace CampusLove.Application.Services
             _repository.Create(address);
         }
 
-        public IEnumerable<Countries> GetAllCountries()
+        public IEnumerable<Country> GetAllCountries()
         {
             return _repository.GetAllCountries().ToList();
         }

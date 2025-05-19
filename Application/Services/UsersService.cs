@@ -8,6 +8,7 @@ namespace CampusLove.Application.Services
 {
     public class UserService
     {
+
         private readonly IUsersRepository _repository;
         private readonly IInteractionsCreditsRepository _creditsRepo;
         private readonly IInteractionsRepository _interactionsRepo;
@@ -20,16 +21,33 @@ namespace CampusLove.Application.Services
             IInteractionsRepository interactionsRepo,
             IMatchesRepository matchesRepo)
         {
+
+
             _repository = repository;
             _creditsRepo = creditsRepo;
             _interactionsRepo = interactionsRepo;
             _matchesRepo = matchesRepo;
+            userRepo = repository;
         }
 
-        public UserService(IUsersRepository userRepo)
+        public UserService(IUsersRepository userRepo, IInteractionsRepository creditsRepo)
         {
             this.userRepo = userRepo;
         }
+
+        public void ShowAll()
+        {
+            var usuarios = ObtenerTodos();
+            Console.WriteLine("╭─────────────── Usuarios registrados ───────────────╮");
+            foreach (var user in usuarios)
+            {
+                Console.WriteLine($" ID: {user.id_user} | Nombre: {user.first_name} {user.last_name} | Email: {user.email}");
+            }
+            Console.WriteLine("╰────────────────────────────────────────────────────╯");
+            Console.WriteLine("Presiona una tecla para continuar...");
+            Console.ReadKey();
+        }
+
 
         public int CreateUser(Users user)
         {

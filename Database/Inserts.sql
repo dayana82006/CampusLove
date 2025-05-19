@@ -1,5 +1,5 @@
 -- Countries
-INSERT INTO Countries (name_country) VALUES ('Colombia');
+INSERT INTO Countries (country_name) VALUES ('Colombia');
 
 -- States
 INSERT INTO States (state_name, id_country) VALUES ('Santander', 1);

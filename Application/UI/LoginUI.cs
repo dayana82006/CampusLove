@@ -6,6 +6,7 @@ using CampusLove.Domain.Interfaces;
 using CampusLove.Infrastructure.Factories;
 using CampusLove.Domain.Ports;
 using CampusLove.Application.UI.User;
+using CampusLove.Application.UI.Admin;
 
 namespace CampusLove.Application.UI
 {
@@ -46,9 +47,7 @@ namespace CampusLove.Application.UI
             _matchesService = matchesService;
         }
 
-        public LoginUI()
-        {
-        }
+    
 
         // Título estilizado
         private static void MostrarTitulo()
@@ -129,7 +128,7 @@ namespace CampusLove.Application.UI
                         break;
                     case 2:
                         Console.Clear();
-                        var creadorUsuario = new User.CreateUser(
+                        var creadorUsuario = new CreateUser(
                             _userService, _genderService, _careerService, _addressService);
                         creadorUsuario.Ejecutar();
                         break;

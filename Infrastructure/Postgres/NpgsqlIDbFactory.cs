@@ -1,5 +1,7 @@
 using CampusLove.Domain.Interfaces;   // Interfaz IDbFactory y repositorios
+using CampusLove.Domain.Ports;
 using CampusLove.Infrastructure.Repositories;  // Implementaciones Pgsql*
+using Npgsql;
 
 namespace CampusLove.Infrastructure.Factories
 {
@@ -51,6 +53,23 @@ namespace CampusLove.Infrastructure.Factories
         public IInteractionsRepository CreateInteractionsRepository()
         {
             return new PgsqlInteractionsRepository(_connectionString);
+        }
+        public ICountryRepository CreateCountryRepository()
+        {
+            return new PgsqlCountryRepository(_connectionString);
+        }
+        public IStatesRepository CreateStatesRepository()
+        {
+            return new PgsqlStatesRepository(_connectionString);
+        }
+        public ICitiesRepository CreateCitiesRepository()
+        {
+            return new PgsqlCitiesRepository(_connectionString);
+        }
+
+        public ICategoryRepository CreateCategoryRepository()
+        {
+           return new PgsqlCategoryRepository(_connectionString);
         }
     }
 

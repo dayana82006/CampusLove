@@ -151,7 +151,7 @@ namespace CampusLove.Application.UI.User
             var paises = _addressService.GetAllCountries();
             Console.WriteLine("Seleccione su país:");
             foreach (var p in paises)
-                Console.WriteLine($"{p.id_country}. {p.name_country}");
+                Console.WriteLine($"{p.id_country}. {p.country_name}");
 
             int id_country;
             while (true)

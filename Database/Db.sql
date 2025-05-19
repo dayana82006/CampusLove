@@ -4,7 +4,7 @@ CREATE DATABASE db_campuslove;
 -- Countries Table
 CREATE TABLE Countries(
     id_country SERIAL PRIMARY KEY,
-    name_country CHARACTER VARYING(50)
+    country_name CHARACTER VARYING(50)
 );
 
 -- States Table
