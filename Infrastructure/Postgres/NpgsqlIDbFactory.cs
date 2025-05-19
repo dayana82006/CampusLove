@@ -57,9 +57,13 @@ namespace CampusLove.Infrastructure.Factories
         {
             return new PgsqlCountryRepository(_connectionString);
         }
-         public IStatesRepository CreateStatesRepository()
+        public IStatesRepository CreateStatesRepository()
         {
             return new PgsqlStatesRepository(_connectionString);
+        }
+        public ICitiesRepository CreateCitiesRepository()
+        {
+            return new PgsqlCitiesRepository(_connectionString);
         }
     }
 

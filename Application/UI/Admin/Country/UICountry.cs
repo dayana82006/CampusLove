@@ -8,11 +8,11 @@ using CampusLove.Application.UI.Admin.Countries;
 
 namespace CampusLove.Application.UI.Admin.Countries
 {
-    public class UIPais
+    public class UICountry
     {
         private readonly CountryService _servicio;
 
-        public UIPais(IDbFactory factory)
+        public UICountry(IDbFactory factory)
         {
             if (factory == null)
                 throw new ArgumentNullException(nameof(factory));

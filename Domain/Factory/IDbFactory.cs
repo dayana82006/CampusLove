@@ -13,5 +13,6 @@ namespace CampusLove.Domain.Interfaces
         IInteractionsRepository CreateInteractionsRepository();
         ICountryRepository CreateCountryRepository();
         IStatesRepository CreateStatesRepository();
+        ICitiesRepository CreateCitiesRepository();
     }
 }
