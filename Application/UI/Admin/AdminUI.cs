@@ -5,6 +5,7 @@ using CampusLove.Application.UI.Admin.Career;
 using CampusLove.Application.UI.Admin.Users;
 using CampusLove.Domain.Interfaces;
 using CampusLove.Application.UI.Admin.Interest;
+using CampusLove.Application.UI.Admin.Gender;
 
 namespace CampusLove.Application.UI
 {
@@ -81,7 +82,8 @@ namespace CampusLove.Application.UI
                         uiState.GestionarStates();
                         break;
                     case 8:
-                        Console.WriteLine("🚧 Opción en desarrollo. Pronto disponible.");
+                        var uiGender = new UIGender(new GendersService(_factory.CreateGendersRepository()));
+                        uiGender.GestionarGenders();
                         Console.ReadKey();
                         break;
                     case 0:

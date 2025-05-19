@@ -38,7 +38,7 @@ namespace CampusLove.Application.UI.Admin.Career
             _servicio.CreateCareer(career);
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\n✅ Carrera creada con éxito. ¡Buena suerte a los futuros estudiantes!");
+            Console.WriteLine("\n✅ Carrera creada con éxito. ");
             Console.ResetColor();
         }
     }
