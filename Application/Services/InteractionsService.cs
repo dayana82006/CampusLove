@@ -8,84 +8,191 @@ namespace CampusLove.Application.Services
     public class InteractionsService
     {
         private readonly IInteractionsRepository _interactionsRepository;
-        private const int DailyCreditLimit = 5; 
+        private readonly InteractionCreditsService _creditsService;
+        private readonly UserStatisticsService _statisticsService;
+        private MatchesService _matchesService; // Será inicializado después
 
-        public InteractionsService(IInteractionsRepository interactionsRepository)
+        public InteractionsService(
+            IInteractionsRepository interactionsRepository, 
+            InteractionCreditsService creditsService,
+            UserStatisticsService statisticsService)
         {
             _interactionsRepository = interactionsRepository;
+            _creditsService = creditsService;
+            _statisticsService = statisticsService;
         }
 
-        public void RegisterInteraction(int userId, int targetUserId, string interactionType)
+        // Método para establecer el MatchesService (para evitar dependencia circular)
+        public void SetMatchesService(MatchesService matchesService)
         {
-            var existingInteraction = _interactionsRepository
-                .GetAll()
-                .FirstOrDefault(i => i.id_user_origin == userId && i.id_user_target == targetUserId);
+            _matchesService = matchesService;
+        }
 
-            if (existingInteraction != null)
+        public bool RegisterInteraction(int userId, int targetUserId, string interactionType)
+        {
+            try
             {
-                if (existingInteraction.interaction_type == "like" && interactionType == "like")
+                _creditsService.CheckAndResetCredits(userId);
+
+                var existingInteraction = _interactionsRepository
+                    .GetAll()
+                    .FirstOrDefault(i => i.id_user_origin == userId && i.id_user_target == targetUserId);
+
+                if (interactionType == "like")
                 {
-                    Console.WriteLine("⚠️ Ya le diste like a este usuario. No se descontarán créditos.");
-                    return; 
+                  
+                    bool needsCredit = existingInteraction == null || 
+                                      (existingInteraction != null && existingInteraction.interaction_type == "dislike");
+                    
+                    if (needsCredit)
+                    {
+                        int availableCredits = _creditsService.GetAvailableCredits(userId);
+                        if (availableCredits <= 0)
+                        {
+                            Console.WriteLine("⚠️ No te quedan créditos para dar likes hoy. Regresa mañana.");
+                            return false;
+                        }
+                    }
                 }
-                else if (interactionType == "dislike")
+
+                if (existingInteraction != null)
                 {
-                    existingInteraction.interaction_type = "dislike";
-                    existingInteraction.interaction_date = DateTime.Today;
-                    _interactionsRepository.Update(existingInteraction);
-                    Console.WriteLine("🔁 Has cambiado tu interacción a 'dislike'.");
-                    return;
+                    // Ya existe una interacción previa, verificar si es del mismo tipo
+                    if (existingInteraction.interaction_type == interactionType)
+                    {
+                        // Mismo tipo - no hacer nada
+                        Console.WriteLine($"⚠️ Ya diste {interactionType} a este usuario. No se modifican créditos.");
+                        return false;
+                    }
+
+                    // Cambio de tipo de interacción
+                    if (interactionType == "like")
+                    {
+                        // Cambio de dislike a like: se descuenta crédito
+                        existingInteraction.interaction_type = "like";
+                        existingInteraction.interaction_date = DateTime.Today; 
+                        _interactionsRepository.Update(existingInteraction);
+                        _creditsService.DecrementCredit(userId);
+
+                        // Actualizar estadísticas: incrementar likes enviados, decrementar dislikes enviados
+                        _statisticsService.UpdateUserStatistics(userId);
+                        _statisticsService.UpdateUserStatistics(targetUserId);
+
+                        // Intentar crear match si hay likes mutuos
+                        if (_matchesService != null)
+                        {
+                            // Verificar si el otro usuario también dio like
+                            bool targetLikedUser = _interactionsRepository.GetAll()
+                                .Any(i => i.id_user_origin == targetUserId && 
+                                          i.id_user_target == userId && 
+                                          i.interaction_type == "like");
+                            
+                            if (targetLikedUser)
+                            {
+                                _matchesService.CreateMatch(userId, targetUserId);
+                            }
+                        }
+
+                        Console.WriteLine("👍 Cambiaste de dislike a like. Crédito descontado.");
+                        return true;
+                    }
+                    else if (interactionType == "dislike")
+                    {
+                        // Cambio de like a dislike: no se afectan créditos pero se elimina match si existe
+                        existingInteraction.interaction_type = "dislike";
+                        existingInteraction.interaction_date = DateTime.Today; 
+                        _interactionsRepository.Update(existingInteraction);
+                        
+                        // Actualizar estadísticas: decrementar likes enviados, incrementar dislikes enviados
+                        _statisticsService.UpdateUserStatistics(userId);
+                        _statisticsService.UpdateUserStatistics(targetUserId);
+                        
+                        // Eliminar match si existe
+                        if (_matchesService != null)
+                        {
+                            _matchesService.RemoveMatchIfExists(userId, targetUserId);
+                        }
+
+                        Console.WriteLine("👎 Cambiaste de like a dislike. No se devuelven créditos.");
+                        return false;
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("⚠️ Ya existe una interacción con este usuario.");
-                    return;
+                    // No existía interacción previa
+                    var newInteraction = new Interactions
+                    {
+                        id_user_origin = userId,
+                        id_user_target = targetUserId,
+                        interaction_type = interactionType,
+                        interaction_date = DateTime.Today
+                    };
+                    
+                    if (interactionType == "like")
+                    {
+                        // Nuevo like: descontar crédito
+                        _interactionsRepository.Add(newInteraction);
+                        _creditsService.DecrementCredit(userId);
+
+                        // Actualizar estadísticas
+                        _statisticsService.RegisterSentLike(userId);
+                        _statisticsService.RegisterReceivedLike(targetUserId);
+
+                        // Intentar crear match si hay likes mutuos
+                        if (_matchesService != null)
+                        {
+                            // Verificar si el otro usuario también dio like
+                            bool targetLikedUser = _interactionsRepository.GetAll()
+                                .Any(i => i.id_user_origin == targetUserId && 
+                                          i.id_user_target == userId && 
+                                          i.interaction_type == "like");
+                            
+                            if (targetLikedUser)
+                            {
+                                _matchesService.CreateMatch(userId, targetUserId);
+                            }
+                        }
+
+                        Console.WriteLine("👍 Like registrado. Crédito descontado.");
+                        return true;
+                    }
+                    else if (interactionType == "dislike")
+                    {
+                        _interactionsRepository.Add(newInteraction);
+                        
+                        // Actualizar estadísticas
+                        _statisticsService.RegisterSentDislike(userId);
+                        _statisticsService.RegisterReceivedDislike(targetUserId);
+                        
+                        Console.WriteLine("👎 Dislike registrado. No se descuentan créditos.");
+                        return false;
+                    }
                 }
+
+                return false;
             }
-
-            var interaction = new Interactions
+            catch (Exception ex)
             {
-                id_user_origin = userId,
-                id_user_target = targetUserId,
-                interaction_type = interactionType,
-                interaction_date = DateTime.Today
-            };
-
-            _interactionsRepository.Add(interaction);
+                Console.WriteLine($"❌ Error al registrar interacción: {ex.Message}");
+                return false;
+            }
         }
 
-        public int GetRemainingCredits(int userId)
+        public bool IsMutualLike(int userId, int targetUserId)
         {
-            var today = DateTime.Today;
-            var usedToday = _interactionsRepository
+            var interactionFromCurrent = _interactionsRepository
                 .GetAll()
-                .Where(i => i.id_user_origin == userId && i.interaction_date.Date == today)
-                .Count();
+                .FirstOrDefault(i => i.id_user_origin == userId
+                                  && i.id_user_target == targetUserId
+                                  && i.interaction_type == "like");
 
-            return Math.Max(DailyCreditLimit - usedToday, 0);
-        }
+            var interactionFromTarget = _interactionsRepository
+                .GetAll()
+                .FirstOrDefault(i => i.id_user_origin == targetUserId
+                                  && i.id_user_target == userId
+                                  && i.interaction_type == "like");
 
-        public string ShowRemainingCredits(int userId)
-        {
-            int remaining = GetRemainingCredits(userId);
-            return $"💰 Créditos disponibles hoy: {remaining}";
-        }
-
-        public bool IsMutualLike(int userId1, int userId2)
-        {
-            var allInteractions = _interactionsRepository.GetAll();
-
-            bool user1LikedUser2 = allInteractions.Any(i =>
-                i.id_user_origin == userId1 &&
-                i.id_user_target == userId2 &&
-                i.interaction_type == "like");
-
-            bool user2LikedUser1 = allInteractions.Any(i =>
-                i.id_user_origin == userId2 &&
-                i.id_user_target == userId1 &&
-                i.interaction_type == "like");
-
-            return user1LikedUser2 && user2LikedUser1;
+            return interactionFromCurrent != null && interactionFromTarget != null;
         }
     }
 }

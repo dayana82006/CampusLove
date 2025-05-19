@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "p+2Gfi4AWv0=",
   "success": true,
   "projectFilePath": "C:\\Users\\Dayana\\OneDrive\\Documentos\\CampusJ1\\C#\\CampusLove\\CampusLove.csproj",
+=======
+  "dgSpecHash": "/77vcZcvDzA=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\merli\\Downloads\\CampusLove\\CampusLove\\CampusLove.csproj",
+>>>>>>> b9a09a6ad589636af32354094a805d4d80421b32
   "expectedPackageFiles": [
     "C:\\Users\\Dayana\\.nuget\\packages\\bouncycastle.cryptography\\2.5.1\\bouncycastle.cryptography.2.5.1.nupkg.sha512",
     "C:\\Users\\Dayana\\.nuget\\packages\\dapper\\2.1.66\\dapper.2.1.66.nupkg.sha512",

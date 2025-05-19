@@ -165,7 +165,7 @@ namespace CampusLove.Application.UI.User
 
                 ⊹⊱✿⊰⊹ Intereses del Corazón ⊹⊱✿⊰⊹
 
-                {interestsList}
+{interestsList}
 
                 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 

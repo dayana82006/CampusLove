@@ -38,6 +38,8 @@ internal class Program
             var matchesRepo = factory.CreateMatchesRepository();
             var interestsRepo = factory.CreateInterestsRepository();
             var usersInterestsRepo = factory.CreateUsersInterestsRepository();
+            var messagesRepo = factory.CreateMessagesRepository();
+            var statisticsRepo = factory.CreateUserStatisticsRepository();
 
             var careersService = new CareersService(careerRepo);
             var addressesService = new AddressesService(addressRepo, connStr);
@@ -46,10 +48,25 @@ internal class Program
             var authService = new AuthService(userRepo);
             var userService = new UserService(userRepo, interactionsCreditsRepo, interactionsRepo, matchesRepo);
             var genderService = new GendersService(genderRepo);
-            var interactionsService = new InteractionsService(factory.CreateInteractionsRepository());
-            var interactionCreditsService = new InteractionCreditsService(interactionsRepo, interactionsCreditsRepo);
-            var matchesService = new MatchesService(factory.CreateMatchesRepository());
 
+            var userStatisticsService = new UserStatisticsService(
+                statisticsRepo,
+                userRepo,
+                interactionsRepo,
+                matchesRepo
+            );
+
+            var interactionCreditsService = new InteractionCreditsService(interactionsRepo, interactionsCreditsRepo);
+
+            var interactionsService = new InteractionsService(
+                interactionsRepo,
+                interactionCreditsService,
+                userStatisticsService
+            );
+
+            var messagesService = new MessagesService(messagesRepo); // ✅ Constructor flexible
+            var matchesService = new MatchesService(matchesRepo, interactionsRepo, messagesService);
+            messagesService.SetMatchesService(matchesService); // ✅ Inyección posterior
 
 
             var loginUI = new LoginUI(
@@ -60,13 +77,14 @@ internal class Program
                 genderService,
                 careersService,
                 addressesService,
-                interactionsService,         
-                interactionCreditsService, 
-                matchesService   
+                interactionsService,
+                interactionCreditsService,
+                matchesService,
+                messagesService,
+                userStatisticsService
             );
+
             loginUI.MostrarMenu();
-
-
         }
         catch (Exception ex)
         {

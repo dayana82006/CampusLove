@@ -14,6 +14,8 @@ namespace CampusLove.Application.UI.User
         private readonly InteractionsService _interactionsService;
         private readonly InteractionCreditsService _creditsService;
         private readonly MatchesService _matchesService;
+        private readonly UserStatisticsService _userStatisticsService;
+        private readonly MessagesService _messagesService;
         private readonly dynamic _usuario;
 
         public UIUsers(
@@ -26,6 +28,8 @@ namespace CampusLove.Application.UI.User
             InteractionsService interactionsService,
             InteractionCreditsService creditsService,
             MatchesService matchesService,
+            UserStatisticsService userStatisticsService,
+            MessagesService messagesService,
             dynamic usuario)
         {
             _userService = userService;
@@ -37,45 +41,46 @@ namespace CampusLove.Application.UI.User
             _interactionsService = interactionsService;
             _creditsService = creditsService;
             _matchesService = matchesService;
+            _userStatisticsService = userStatisticsService;
+            _messagesService = messagesService;
             _usuario = usuario;
         }
-       public string InitialMenu()
-{
-    Console.Clear();
-    var creditos = _creditsService.GetAvailableCredits((int)_usuario.id_user);
-    Console.ForegroundColor = ConsoleColor.Magenta;
-    Console.WriteLine("\t(¯`·.¸¸.·´¯`.¸¸.-> ✧˚･ﾟ: *✧:ﾟ･ﾟ:* LOVE ZONE *:･ﾟ✧*:ﾟ･ﾟ:˚ <-.·´¯`·.¸¸.·´¯)");
-    Console.ResetColor();
+        
+        public string InitialMenu()
+        {
+            Console.Clear();
+            var creditos = _creditsService.GetAvailableCredits((int)_usuario.id_user);
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("\t(¯`·.¸¸.·´¯`.¸¸.-> ✧˚･ﾟ: *✧:ﾟ･ﾟ:* LOVE ZONE *:･ﾟ✧*:ﾟ･ﾟ:˚ <-.·´¯`·.¸¸.·´¯)");
+            Console.ResetColor();
 
 
-    Console.ForegroundColor = ConsoleColor.Yellow;
-    Console.WriteLine($"\n\t👤 Usuario: {_usuario.first_name} {_usuario.last_name}");
-    Console.WriteLine($"\t🎁 Créditos disponibles hoy:  {creditos}");
-    Console.WriteLine("\n\t════════════════════════════════════════════════════════");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"\n\t👤 Usuario: {_usuario.first_name} {_usuario.last_name}");
+            Console.WriteLine($"\t🎁 Créditos disponibles hoy:  {creditos}");
+            Console.WriteLine("\n\t════════════════════════════════════════════════════════");
 
-    Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine("\t1. 👀 Ver Perfiles y Dar Like o Dislike");
-    Console.WriteLine("\t2. 💌 Ver Mis Coincidencias (Matches)");
-    Console.WriteLine("\t3. 📊 Ver Estadísticas del Sistema");
-    Console.WriteLine("\t4. 🙋‍♂️ Ver Mi Perfil");
-    Console.WriteLine("\t0. 🚪 Cerrar Sesión");
-    Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\t1. 👀 Ver Perfiles y Dar Like o Dislike");
+            Console.WriteLine("\t2. 💌 Ver Mis Coincidencias (Matches)");
+            Console.WriteLine("\t3. 📊 Ver Estadísticas del Sistema");
+            Console.WriteLine("\t4. 🙋‍♂️ Ver Mi Perfil");
+            Console.WriteLine("\t0. 🚪 Cerrar Sesión");
+            Console.ResetColor();
 
-    Console.WriteLine("\t════════════════════════════════════════════════════════\n");
+            Console.WriteLine("\t════════════════════════════════════════════════════════\n");
 
-    // 💫 Detalle decorativo sutil y tierno
-    Console.ForegroundColor = ConsoleColor.Yellow;
-    Console.WriteLine("\t˚₊‧꒰ა ⊹ ୨୧ ¡Recuerda sonreír, Cupido nunca descansa! ୨୧ ⊹ ꒱‧₊˚");
-    Console.ResetColor();
+            // 💫 Detalle decorativo sutil y tierno
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\t˚₊‧꒰ა ⊹ ୨୧ ¡Recuerda sonreír, Cupido nunca descansa! ୨୧ ⊹ ꒱‧₊˚");
+            Console.ResetColor();
 
-    Console.ForegroundColor = ConsoleColor.Magenta;
-    Console.Write("\n💗 Seleccione una opción 💗: ");
-    Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("\n💗 Seleccione una opción 💗: ");
+            Console.ResetColor();
 
-    return "";
-}
-
-
+            return "";
+        }
 
         public void Ejecutar()
         {
@@ -107,11 +112,25 @@ namespace CampusLove.Application.UI.User
                         break;
                     case "2":
                         Console.Clear();
-                        Console.WriteLine("♥♥♥♥♥♥ MIS COINCIDENCIAS ♥♥♥♥♥♥");
+                        var matchViewer = new MatchViewer(
+                            _userService,
+                            _matchesService,
+                            _interactionsService,
+                            _usersInterestsService,
+                            _interestsService,
+                            _gendersService,
+                            _careersService,
+                            _addressesService,
+                            _messagesService,
+                            _usuario);
+                        matchViewer.DisplayMatches();
                         break;
                     case "3":
                         Console.Clear();
-                        Console.WriteLine("♥♥♥♥♥♥ ESTADÍSTICAS DEL SISTEMA ♥♥♥♥♥♥");
+                        var statisticsViewer = new StatisticsViewer(
+                            _userStatisticsService,
+                            _usuario);
+                        statisticsViewer.DisplayStatistics();
                         break;
                     case "4":
                         Console.Clear();
@@ -137,5 +156,4 @@ namespace CampusLove.Application.UI.User
             }
         }
     }
-
 }

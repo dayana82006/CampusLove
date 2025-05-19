@@ -12,10 +12,16 @@ namespace CampusLove.Domain.Interfaces
         IUsersInterestsRepository CreateUsersInterestsRepository();
         IInteractionsCreditsRepository CreateInteractionCreditsRepository();
         IMatchesRepository CreateMatchesRepository();
+<<<<<<< HEAD
         IInteractionsRepository CreateInteractionsRepository();
         ICountryRepository CreateCountryRepository();
         IStatesRepository CreateStatesRepository();
         ICitiesRepository CreateCitiesRepository();
         ICategoryRepository CreateCategoryRepository();
+=======
+        IUserStatisticsRepository CreateUserStatisticsRepository();
+        IMessagesRepository CreateMessagesRepository();
+   
+>>>>>>> b9a09a6ad589636af32354094a805d4d80421b32
     }
 }

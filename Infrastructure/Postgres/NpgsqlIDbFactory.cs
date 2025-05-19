@@ -54,6 +54,7 @@ namespace CampusLove.Infrastructure.Factories
         {
             return new PgsqlInteractionsRepository(_connectionString);
         }
+<<<<<<< HEAD
         public ICountryRepository CreateCountryRepository()
         {
             return new PgsqlCountryRepository(_connectionString);
@@ -70,6 +71,15 @@ namespace CampusLove.Infrastructure.Factories
         public ICategoryRepository CreateCategoryRepository()
         {
            return new PgsqlCategoryRepository(_connectionString);
+=======
+        public IUserStatisticsRepository CreateUserStatisticsRepository()
+        {
+            return new PgsqlUserStatisticsRepository(_connectionString);
+        }
+        public IMessagesRepository CreateMessagesRepository()
+        {
+            return new PgsqlMessagesRepository(_connectionString);
+>>>>>>> b9a09a6ad589636af32354094a805d4d80421b32
         }
     }
 

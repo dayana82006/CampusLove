@@ -118,7 +118,7 @@ CREATE TABLE Matches (
 
 -- User Statistics Table
 CREATE TABLE UserStatistics (
-    id_user INT PRIMARY KEY,
+    id_user SERIAL PRIMARY KEY,
     received_likes INT DEFAULT 0,
     received_dislikes INT DEFAULT 0,
     sent_likes INT DEFAULT 0,
@@ -127,3 +127,11 @@ CREATE TABLE UserStatistics (
     last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_user) REFERENCES Users(id_user) ON DELETE CASCADE
 );
+CREATE TABLE Messages (
+    id SERIAL PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message_text VARCHAR(250) NOT NULL,
+    message_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
