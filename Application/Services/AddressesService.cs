@@ -9,15 +9,19 @@ namespace CampusLove.Application.Services
 {
     public class AddressesService
     {
+         // Campos privados para los repositorios inyectados
         private readonly IAddressesRepository _repository;
         private readonly string _connStr;
-
+        // Constructor
         public AddressesService(IAddressesRepository repository, string connStr)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _connStr = connStr ?? throw new ArgumentNullException(nameof(connStr));
         }
 
+        
+
+        //metodo para obtener la dirección completa
         public string GetFullAddress(int idAddress)
         {
             var address = _repository.GetById(idAddress);
@@ -42,36 +46,43 @@ namespace CampusLove.Application.Services
             return string.Join(", ", parts);
         }
 
+        // Método para mostrar todas las direcciones
         public IEnumerable<Addresses> GetAll()
         {
             return _repository.GetAll();
         }
 
+        // Método para obtener una dirección por ID
         public Addresses? GetById(int id)
         {
             return _repository.GetById(id);
         }
 
+        // Método para crear una nueva dirección
         public void CrearAddress(Addresses address)
         {
             if (address == null) throw new ArgumentNullException(nameof(address));
             _repository.Create(address);
         }
 
+        // Método para obtener todas los países
         public IEnumerable<Country> GetAllCountries()
         {
             return _repository.GetAllCountries().ToList();
         }
-
+        // Método para obtener un estado por pais
         public IEnumerable<States> GetStatesByCountry(int id_country)
         {
             return _repository.GetStatesByCountry(id_country).ToList();
         }
 
+        // Método para obtener una ciudad por estado
         public IEnumerable<Cities> GetCitiesByState(int id_state)
         {
             return _repository.GetCitiesByState(id_state).ToList();
         }
+
+        // Método para obtener o crear una dirección
         public int ObtenerOCrearDireccion(Addresses nuevaDireccion)
         {
             if (nuevaDireccion == null) throw new ArgumentNullException(nameof(nuevaDireccion));
@@ -119,6 +130,7 @@ namespace CampusLove.Application.Services
             throw new Exception("No se pudo insertar la dirección.");
         }
 
+        // Método para eliminar una dirección
         public void Delete(int id)
         {
             if (id <= 0) throw new ArgumentException("El ID debe ser mayor a cero.");

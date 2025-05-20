@@ -8,6 +8,8 @@ namespace CampusLove.Application.UI.User
 {
     public class ViewMyProfile
     {
+
+        //inyeccion de servicios 
         private readonly UserService _userService;
         private readonly UsersInterestsService _usersInterestsService;
         private readonly InterestsService _interestsService;
@@ -64,9 +66,11 @@ namespace CampusLove.Application.UI.User
             
     string asciiArt = "";
 
+    // * DEPENDIENDO DEL GENERO MOSTRARA UNA "FOTO DE PERFIL" 
+
     if (gender.ToLower() == "femenino")
-    {
-                    asciiArt = @"
+            {
+                asciiArt = @"
             ...........................................................................................
             ..........................................+#########-......................................
             .......................................-#############+......................................
@@ -96,9 +100,9 @@ namespace CampusLove.Application.UI.User
             .........................--+------.--------------------+###############++-................
             ...................------------------------------+################+++.......................
             ...................---.------..-----------------+++#+#+###########+++-......................";
-    }
-    else if (gender.ToLower() == "masculino")
-    {
+            }
+            else if (gender.ToLower() == "masculino")
+            {
                 asciiArt = @"
         +++++++++++++++++++++++++++++++++++++###########+++++++++++++++++++++++++++++++++++++++-
         ++++++++++++++++++++++++++++++++++##################+++++++++++++++++++++++++++++++-----
@@ -130,15 +134,15 @@ namespace CampusLove.Application.UI.User
         ++++++++++++++-................................--.......................-..+..----+------
         ++++++++++++++...............................--........................-..--.-----+------
         ";
-    }
-    else
-    {
-        asciiArt = @"
+            }
+            else
+            {
+                asciiArt = @"
         (\_/)
         ( •ᴥ•)
         / >💫
         ";
-    }
+            }
             Console.Clear();
             return
             $@"

@@ -6,6 +6,7 @@ using CampusLove.Domain.Interfaces;
 namespace CampusLove.Application.Services;
 public class CityService
 {
+     // Campos privados para los repositorios inyectados
     private readonly ICitiesRepository _repo;
     private readonly IStatesRepository _statesRepo;
 
@@ -16,6 +17,7 @@ public CityService(ICitiesRepository repo, IStatesRepository statesRepo)
         _statesRepo = statesRepo;
     }
 
+    // Método para crear ciudad
     public bool CreateCity(Cities city)
     {
         if (string.IsNullOrWhiteSpace(city.city_name))
@@ -32,10 +34,11 @@ public CityService(ICitiesRepository repo, IStatesRepository statesRepo)
         return true;
     }
 
+    // Método para obtener por ID
     public Cities? GetById(int id) => _repo.GetById(id);
-
+    // Método para obtener todas las ciudades
     public List<Cities> GetAll() => _repo.GetAll().ToList();
-
+    // Método para actualizar ciudad
     public bool UpdateCity(int id, string name)
     {
         var city = _repo.GetById(id);
@@ -54,6 +57,7 @@ public CityService(ICitiesRepository repo, IStatesRepository statesRepo)
         return true;
     }
 
+    // Método para eliminar ciudad
     public bool DeleteCity(int id)
     {
         var existing = _repo.GetById(id);
@@ -64,6 +68,7 @@ public CityService(ICitiesRepository repo, IStatesRepository statesRepo)
         return true;
     }
 
+    // Método para mostrar todas las ciudades
     public void ShowAll()
     {
         var cities = GetAll();

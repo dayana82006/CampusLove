@@ -7,6 +7,7 @@ using System.Linq;
 namespace CampusLove.Application.Services;
 public class InterestsService
 {
+     // Campos privados para los repositorios inyectados
     private readonly IInterestsRepository _repository;
     private readonly ICategoryRepository _categoryRepository;
     private IInterestsRepository interestsRepository;
@@ -22,6 +23,7 @@ public class InterestsService
         this.interestsRepository = interestsRepository;
     }
 
+    //metodo para crear un interes
     public void Create(Interests interests)
     {
         if (string.IsNullOrWhiteSpace(interests.interest_name))
@@ -34,6 +36,7 @@ public class InterestsService
         _repository.Create(interests);
     }
 
+    //acctualiza el interes
     public void Update(Interests interests)
     {
         if (string.IsNullOrWhiteSpace(interests.interest_name))
@@ -46,6 +49,7 @@ public class InterestsService
         _repository.Update(interests);
     }
 
+    //Elimina el interes por id
     public void Delete(int id)
     {
         var interest = _repository.GetById(id);
@@ -55,6 +59,7 @@ public class InterestsService
         _repository.Delete(id);
     }
 
+    //Muestra todos los intereses
     public void ShowAll()
     {
         var interests = _repository.GetAll();

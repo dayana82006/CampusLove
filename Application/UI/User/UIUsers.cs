@@ -3,6 +3,7 @@ using CampusLove.Application.Services;
 
 namespace CampusLove.Application.UI.User
 {
+    // ! solo los usuarios regustrados podran entrar a esta interfaz
     public class UIUsers
     {
         private readonly UserService _userService;
@@ -45,7 +46,7 @@ namespace CampusLove.Application.UI.User
             _messagesService = messagesService;
             _usuario = usuario;
         }
-        
+
         public string InitialMenu()
         {
             Console.Clear();

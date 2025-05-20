@@ -7,6 +7,7 @@ namespace CampusLove.Application.Services
 {
     public class StateService
     {
+        // Campos privados para los repositorios inyectados
         private readonly IStatesRepository _repository;
 
         public StateService(IStatesRepository repository)
@@ -14,6 +15,8 @@ namespace CampusLove.Application.Services
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
+
+        //Crea un estado
         public void CreateState(States state)
         {
             if (string.IsNullOrWhiteSpace(state.state_name))
@@ -21,17 +24,19 @@ namespace CampusLove.Application.Services
 
             _repository.Insert(state);
         }
-
+        //obtiene un estado por id
         public States? GetById(int id)
         {
             return _repository.GetById(id);
         }
 
+
+        //obtiene todos los estados
         public List<States> GetAll()
         {
             return _repository.GetAll().ToList();
         }
-
+        //actualiza los estados
         public bool UpdateState(int id, string name)
         {
             var states = _repository.GetById(id);
@@ -53,6 +58,7 @@ namespace CampusLove.Application.Services
 
             return true;
         }
+        //elimina los estados
         public bool DeleteState(int id)
         {
             var existing = _repository.GetById(id);
@@ -63,7 +69,7 @@ namespace CampusLove.Application.Services
             return true;
         }
 
-
+        //muestra todos los estados 
         public void ShowAll()
         {
             var estados = GetAll();

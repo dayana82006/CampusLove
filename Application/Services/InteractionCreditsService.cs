@@ -7,6 +7,7 @@ namespace CampusLove.Application.Services
 {
     public class InteractionCreditsService
     {
+        // Campos privados para los repositorios inyectados
         private readonly IInteractionsRepository _interactionsRepository;
         private readonly IInteractionsCreditsRepository _interactionCreditsRepository;
         private const int MaxDailyCredits = 10;
@@ -63,9 +64,12 @@ namespace CampusLove.Application.Services
             }
         }
 
+        
+        /// Reduce en 1 los créditos disponibles del usuario
         public void DecrementCredit(int userId)
         {
-            try {
+            try
+            {
                 var credits = _interactionCreditsRepository.GetByUserId(userId);
                 if (credits != null && credits.available_credits > 0)
                 {
@@ -73,16 +77,19 @@ namespace CampusLove.Application.Services
                     _interactionCreditsRepository.Update(credits);
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine($"❌ Error al decrementar crédito: {ex.Message}");
             }
         }
 
+
+        /// Obtiene el total de créditos de interacción de un usuario
         public int GetInteractionCredits(int userId)
         {
             return _interactionCreditsRepository.GetCreditsByUserId(userId);
         }
-
+        /// Obtiene todas las interacciones de un usuario
         public IEnumerable<Interactions> GetUserInteractions(int userId)
         {
             return _interactionsRepository.GetByUserId(userId);

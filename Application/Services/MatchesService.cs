@@ -8,6 +8,7 @@ namespace CampusLove.Application.Services
 {
     public class MatchesService
     {
+         // Campos privados para los repositorios inyectados
         private readonly IMatchesRepository _matchesRepository;
         private readonly IInteractionsRepository _interactionsRepository;
         private readonly MessagesService _messagesService;

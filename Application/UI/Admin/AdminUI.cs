@@ -11,6 +11,8 @@ using CampusLove.Domain.Interfaces;
 
 namespace CampusLove.Application.UI
 {
+    // INFO: interfaz para usuario, donde se define lo que va poder manipular y manejar
+    // ! solo el admin puede ingresar a estos crud
     public class AdminUI
     {
         private readonly IDbFactory _factory;

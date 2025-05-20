@@ -8,7 +8,7 @@ namespace CampusLove.Application.Services
 {
     public class UserService
     {
-
+        // Campos privados para los repositorios inyectados
         private readonly IUsersRepository _repository;
         private readonly IInteractionsCreditsRepository _creditsRepo;
         private readonly IInteractionsRepository _interactionsRepo;
@@ -35,6 +35,7 @@ namespace CampusLove.Application.Services
             this.userRepo = userRepo;
         }
 
+        //muestra todos los usuarios registrados 
         public void ShowAll()
         {
             var usuarios = ObtenerTodos();
@@ -48,7 +49,7 @@ namespace CampusLove.Application.Services
             Console.ReadKey();
         }
 
-
+        //crea un usuario nuevo 
         public int CreateUser(Users user)
         {
             _repository.Create(user);

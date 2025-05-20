@@ -4,6 +4,8 @@ using CampusLove.UI.Admin.Adress;
 
 namespace CampusLove.Application.UI.Admin.Adress
 {
+
+    
     public class UIAdress
     {
         private readonly AddressesService _service;

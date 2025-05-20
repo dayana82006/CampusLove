@@ -5,12 +5,17 @@ namespace CampusLove.Application.Services;
 
 public class CareersService
 {
+     // Campos privados para los repositorios inyectados
     private readonly ICareersRepository _repository;
 
     public CareersService(ICareersRepository repository)
     {
         _repository = repository;
     }
+
+    //Metodo para mostrar todas las carreras
+    // Se utiliza el método GetAll() del repositorio para obtener la lista de carreras  
+    // y luego se imprime en la consola
 
     public void ShowAll()
     {
@@ -32,6 +37,8 @@ public class CareersService
         }
         Console.WriteLine(new string('-', 40));
     }
+
+    //Metodo para crear una carrera
     public void CreateCareer(Careers career)
     {
         if (string.IsNullOrWhiteSpace(career.career_name))
@@ -43,8 +50,9 @@ public class CareersService
         return _repository.GetAll();
     }
 
+    //Metodo para obtener una carrera por id
     public Careers? GetById(int id)
-    {   
+    {
         var career = _repository.GetById(id);
         if (career == null)
         {
@@ -52,8 +60,9 @@ public class CareersService
             return null;
         }
         return _repository.GetById(id);
-    }
-    
+
+}
+    //Metodo para actualizar una carrera
     public void Update(Careers career)
     {
         if (career == null)
@@ -68,6 +77,8 @@ public class CareersService
         }
         _repository.Update(career);
     }
+
+    //Metodo para eliminar una carrera
     public void Delete(int id)
     {
         var existingCareer = _repository.GetById(id);

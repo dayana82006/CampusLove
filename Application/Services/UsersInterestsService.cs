@@ -6,17 +6,21 @@ namespace CampusLove.Application.Services
 {
     public class UsersInterestsService
     {
+         // Campos privados para los repositorios inyectados
         private readonly IUsersInterestsRepository _repository;
 
+    
         public UsersInterestsService(IUsersInterestsRepository repository)
         {
             _repository = repository ?? throw new System.ArgumentNullException(nameof(repository));
         }
 
+        //asocia un interes a un usuario
         public void AsociarIntereses(int id_user, IEnumerable<int> intereses)
         {
             _repository.AddUserInterests(id_user, intereses);
         }
+        
 
         public void Guardar(int userId, int interesId)
         {

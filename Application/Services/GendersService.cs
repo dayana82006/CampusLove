@@ -5,23 +5,28 @@ namespace CampusLove.Application.Services
 {
     public class GendersService
     {
+        // Campos privados
         private readonly IGendersRepository _repository;
 
+        // Constructor
         public GendersService(IGendersRepository repository)
         {
             _repository = repository;
         }
 
+        // Método para mostrar todas los generos
         public IEnumerable<Genders> GetAll()
         {
             return _repository.GetAll();
         }
 
+        // Método para obtener por id
         public Genders? GetById(int id)
         {
             return _repository.GetById(id);
         }
 
+        // Método para mostrar todos los generos
         public void ShowAll()
         {
             var genders = GetAll();
@@ -42,6 +47,7 @@ namespace CampusLove.Application.Services
             Console.WriteLine(new string('-', 40));
         }
 
+        // Método para crear un genero
         public void CreateGender(Genders genders)
         {
             if (string.IsNullOrWhiteSpace(genders.genre_name))
@@ -49,6 +55,7 @@ namespace CampusLove.Application.Services
             _repository.Create(genders);
         }
 
+        //Metodo para actualizar genero 
         public void Update(Genders gender)
         {
 
@@ -65,6 +72,8 @@ namespace CampusLove.Application.Services
             _repository.Update(gender);
         }
 
+
+        //metodo para eliminar genero 
         public void Delete(int id)
         {
             var existingGender = _repository.GetById(id);

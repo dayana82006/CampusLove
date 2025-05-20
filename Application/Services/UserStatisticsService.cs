@@ -6,6 +6,7 @@ using CampusLove.Domain.Interfaces;
 
 namespace CampusLove.Application.Services
 {
+     // Campos privados para los repositorios inyectados
     public class UserStatisticsService
     {
         private readonly IUserStatisticsRepository _userStatisticsRepository;
@@ -66,9 +67,9 @@ namespace CampusLove.Application.Services
                 };
 
                 CalculateUserStatistics(userId, stats);
-                
+
                 _userStatisticsRepository.Add(stats);
-                
+
                 return stats;
             }
             catch (Exception ex)
@@ -84,7 +85,7 @@ namespace CampusLove.Application.Services
             try
             {
                 var stats = _userStatisticsRepository.GetByUserId(userId);
-                
+
                 if (stats == null)
                 {
                     CreateAndInitializeStatistics(userId);
@@ -92,9 +93,9 @@ namespace CampusLove.Application.Services
                 }
 
                 CalculateUserStatistics(userId, stats);
-                
+
                 stats.last_update = DateTime.Now;
-                
+
                 _userStatisticsRepository.Update(stats);
             }
             catch (Exception ex)
@@ -106,15 +107,15 @@ namespace CampusLove.Application.Services
         private void CalculateUserStatistics(int userId, UserStatistics stats)
         {
             var interactions = _interactionsRepository.GetAll();
-            
+
             // Contar likes y dislikes enviados
             stats.sent_likes = interactions.Count(i => i.id_user_origin == userId && i.interaction_type == "like");
             stats.sent_dislikes = interactions.Count(i => i.id_user_origin == userId && i.interaction_type == "dislike");
-            
+
             // Contar likes y dislikes recibidos
             stats.received_likes = interactions.Count(i => i.id_user_target == userId && i.interaction_type == "like");
             stats.received_dislikes = interactions.Count(i => i.id_user_target == userId && i.interaction_type == "dislike");
-            
+
             // Contar matches
             var matches = _matchesRepository.GetAllMatches();
             stats.total_matches = matches.Count(m => m.id_user1 == userId || m.id_user2 == userId);
@@ -235,37 +236,37 @@ namespace CampusLove.Application.Services
         }
 
         public List<(Users User, double Ratio)> GetUsersWithBestLikeRatio(int topCount = 5)
-{
-    try
-    {
-        var allUsers = _usersRepository.GetAll();
-        var result = new List<(Users User, double Ratio)>();
-
-        foreach (var user in allUsers)
         {
-            var stats = GetUserStatistics(user.id_user);
-            double ratio = 0;
-
-            int totalReceived = stats.received_likes + stats.received_dislikes;
-
-            if (totalReceived > 0)
+            try
             {
-                ratio = (double)stats.received_likes / totalReceived;
-                result.Add((user, ratio)); 
+                var allUsers = _usersRepository.GetAll();
+                var result = new List<(Users User, double Ratio)>();
+
+                foreach (var user in allUsers)
+                {
+                    var stats = GetUserStatistics(user.id_user);
+                    double ratio = 0;
+
+                    int totalReceived = stats.received_likes + stats.received_dislikes;
+
+                    if (totalReceived > 0)
+                    {
+                        ratio = (double)stats.received_likes / totalReceived;
+                        result.Add((user, ratio));
+                    }
+                }
+
+                return result
+                    .OrderByDescending(item => item.Ratio)
+                    .Take(topCount)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error al obtener usuarios con mejor ratio: {ex.Message}");
+                return new List<(Users User, double Ratio)>();
             }
         }
-
-        return result
-            .OrderByDescending(item => item.Ratio)
-            .Take(topCount)
-            .ToList();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"❌ Error al obtener usuarios con mejor ratio: {ex.Message}");
-        return new List<(Users User, double Ratio)>();
-    }
-}
 
     }
 }

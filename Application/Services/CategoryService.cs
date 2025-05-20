@@ -6,6 +6,7 @@ namespace CampusLove.Application.Services;
 
 public class CategoryService
 {
+     // Campos privados para los repositorios inyectados
     private readonly ICategoryRepository _categoryRepository;
 
     public CategoryService(ICategoryRepository categoryRepository)
@@ -13,6 +14,8 @@ public class CategoryService
         _categoryRepository = categoryRepository;
     }
 
+    //Metodo para mostrar todas las categorias
+    // Se utiliza el método GetAll() del repositorio para obtener la lista de categorias
     public void ShowAll()
     {
         var categories = _categoryRepository.GetAll();
@@ -32,6 +35,8 @@ public class CategoryService
         }
         Console.WriteLine(new string('-', 40));
     }
+
+    //Metodo para crear una categoria
     public void CreateCategory(Category category)
     {
         if (string.IsNullOrWhiteSpace(category.interest_category))
@@ -39,6 +44,7 @@ public class CategoryService
         _categoryRepository.Create(category);
     }
 
+    //Metodo para obtener todas las categorias
     public IEnumerable<Category> GetAll()
     {
         var categories = _categoryRepository.GetAll();
@@ -50,6 +56,7 @@ public class CategoryService
         return _categoryRepository.GetAll();
     }
 
+    //Metodo para obtener una categoria por id
     public Category? GetById(int id)
     {
         var category = _categoryRepository.GetById(id);
@@ -61,6 +68,8 @@ public class CategoryService
 
         return _categoryRepository.GetById(id);
     }
+
+    //Metodo para actualizar una categoria
     public void UpdateCategory(Category category)
     {
         if (category == null)
@@ -76,6 +85,8 @@ public class CategoryService
         }
         _categoryRepository.Update(category);
     }
+
+    //Metodo para eliminar una categoria    
     public void Delete(int id)
     {
         var category = _categoryRepository.GetById(id);

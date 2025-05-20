@@ -10,6 +10,10 @@ using CampusLove.Application.UI.Admin;
 
 namespace CampusLove.Application.UI
 {
+    /* INFO: Login inicial donde se inyectan los servicios y repositorios
+    con su interfaz agradable al publico y ambientada en el amor de campus love 
+    psdt: Es el  mismo amor que le metimos a etse proyecto
+    */
     public class LoginUI
     {
         private readonly AuthService _repo;

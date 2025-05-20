@@ -7,6 +7,7 @@ namespace CampusLove.Application.Services
 {
     public class InteractionsService
     {
+         // Campos privados para los repositorios inyectados
         private readonly IInteractionsRepository _interactionsRepository;
         private readonly InteractionCreditsService _creditsService;
         private readonly UserStatisticsService _statisticsService;

@@ -8,20 +8,21 @@ using CampusLove.Domain.Interfaces;
 namespace CampusLove.Application.Services
 {
     public class MessagesService
-{
-    private IMessagesRepository _messagesRepository;
-    private MatchesService _matchesService;
-
-    public MessagesService(IMessagesRepository messagesRepository)
     {
-        _messagesRepository = messagesRepository ?? throw new ArgumentNullException(nameof(messagesRepository));
-    }
+        // Campos privados para los repositorios inyectados
+        private IMessagesRepository _messagesRepository;
+        private MatchesService _matchesService;
 
-    public void SetMatchesService(MatchesService matchesService)
-    {
-        _matchesService = matchesService ?? throw new ArgumentNullException(nameof(matchesService));
-    }
-    
+        public MessagesService(IMessagesRepository messagesRepository)
+        {
+            _messagesRepository = messagesRepository ?? throw new ArgumentNullException(nameof(messagesRepository));
+        }
+
+        public void SetMatchesService(MatchesService matchesService)
+        {
+            _matchesService = matchesService ?? throw new ArgumentNullException(nameof(matchesService));
+        }
+
         public bool SendMessage(int senderId, int receiverId, string message)
         {
             try
@@ -54,6 +55,7 @@ namespace CampusLove.Application.Services
                     return false;
                 }
 
+
                 var msg = new Messages
                 {
                     id_user_sender = senderId,
@@ -73,6 +75,8 @@ namespace CampusLove.Application.Services
             }
         }
 
+
+        // Obtiene toda la conversación entre dos usuarios 
         public List<Messages> GetConversation(int userId1, int userId2)
         {
             try
@@ -91,6 +95,8 @@ namespace CampusLove.Application.Services
             }
         }
 
+
+        // Obtiene todos los mensajes recibidos por un usuario (orden descendente)
         public List<Messages> GetReceivedMessages(int userId)
         {
             try
@@ -107,6 +113,8 @@ namespace CampusLove.Application.Services
             }
         }
 
+
+        //obtiene todos los mensajes enviados por un usuario
         public List<Messages> GetSentMessages(int userId)
         {
             try
@@ -123,6 +131,7 @@ namespace CampusLove.Application.Services
             }
         }
 
+        //permite eliminar mensajes 
         public void DeleteMessage(int messageId)
         {
             try
@@ -135,7 +144,7 @@ namespace CampusLove.Application.Services
                 Console.WriteLine($"❌ Error al eliminar mensaje: {ex.Message}");
             }
         }
-
+        // Obtener todo el historial de mensajes de un usuario
         public List<Messages> GetUserMessageHistory(int userId)
         {
             try
@@ -152,6 +161,9 @@ namespace CampusLove.Application.Services
             }
         }
 
+
+
+    // * Envía un mensaje entre dos usuarios si hay un match válido.
         public List<Messages> GetMessagesBetweenUsers(int userId1, int userId2)
         {
             try
@@ -193,10 +205,10 @@ namespace CampusLove.Application.Services
                         foreach (var msg in messages)
                         {
                             var sender = msg.id_user_sender == currentUserId ? "Tú" : "Match";
-                            var color = msg.id_user_sender == currentUserId 
-                                ? ConsoleColor.Cyan 
+                            var color = msg.id_user_sender == currentUserId
+                                ? ConsoleColor.Cyan
                                 : ConsoleColor.Yellow;
-                            
+
                             Console.ForegroundColor = color;
                             Console.WriteLine($"\n[{msg.send_date:dd/MM/yyyy HH:mm}] {sender}: {msg.content}");
                             Console.ResetColor();
@@ -223,7 +235,7 @@ namespace CampusLove.Application.Services
                             }
                             else
                             {
-                                Thread.Sleep(2000); 
+                                Thread.Sleep(2000);
                             }
                         }
                         else
