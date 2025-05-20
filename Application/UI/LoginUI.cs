@@ -53,9 +53,8 @@ namespace CampusLove.Application.UI
             _userStatisticsService = userStatisticsService;
         }
 
-    
 
-        // Título estilizado
+
         private static void MostrarTitulo()
         {
             Console.Clear();
@@ -82,7 +81,6 @@ namespace CampusLove.Application.UI
             Console.ResetColor();
         }
 
-        // Oculta la contraseña mientras se escribe
         public static string LeerContraseniaOculta()
         {
             string contrasenia = "";
@@ -116,7 +114,6 @@ namespace CampusLove.Application.UI
                 "0. Salir\n";
         }
 
-        // Menú principal del login
         public void MostrarMenu()
         {
             bool salir = false;
@@ -130,14 +127,21 @@ namespace CampusLove.Application.UI
                 switch (opcion)
                 {
                     case 1:
-                      IniciarSesion();
+                        IniciarSesion();
                         break;
                     case 2:
                         Console.Clear();
                         var creadorUsuario = new CreateUser(
-                            _userService, _genderService, _careerService, _addressService);
+                            _userService,
+                            _genderService,
+                            _careerService,
+                            _addressService,
+                            _interestService,
+                            _userInterestService
+                        );
                         creadorUsuario.Ejecutar();
                         break;
+
                     case 0:
                         Console.WriteLine("\n¿Está seguro que desea salir? 🥺 (S/N): ");
                         salir = Utilidades.LeerTecla();
@@ -154,7 +158,7 @@ namespace CampusLove.Application.UI
         // Lógica para iniciar sesión
         private bool IniciarSesion()
         {
-            
+
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("💗 INICIO DE SESIÓN 💗\n");
@@ -190,7 +194,6 @@ namespace CampusLove.Application.UI
             else
             {
 
-                // Ir al menú de usuario normal
                 var uiUsers = new UIUsers(
                     _userService,
                     _userInterestService,

@@ -72,7 +72,6 @@ namespace CampusLove.Application.Services
         {
             return _repository.GetCitiesByState(id_state).ToList();
         }
-
         public int ObtenerOCrearDireccion(Addresses nuevaDireccion)
         {
             if (nuevaDireccion == null) throw new ArgumentNullException(nameof(nuevaDireccion));
@@ -86,18 +85,35 @@ namespace CampusLove.Application.Services
             using var connection = new NpgsqlConnection(_connStr);
             connection.Open();
 
-            using var command = new NpgsqlCommand(
+            // 1. Intentar buscar dirección existente
+            using (var selectCmd = new NpgsqlCommand(
+                "SELECT id_address FROM addresses WHERE id_city = @id_city AND street_number = @street_number AND street_name = @street_name",
+                connection))
+            {
+                selectCmd.Parameters.AddWithValue("@id_city", nuevaDireccion.id_city);
+                selectCmd.Parameters.AddWithValue("@street_number", nuevaDireccion.street_number);
+                selectCmd.Parameters.AddWithValue("@street_name", nuevaDireccion.street_name);
+
+                var existingId = selectCmd.ExecuteScalar();
+                if (existingId != null && int.TryParse(existingId.ToString(), out int foundId))
+                {
+                    return foundId; // Retorna dirección existente
+                }
+            }
+
+            // 2. Si no existe, insertar nueva dirección
+            using var insertCmd = new NpgsqlCommand(
                 "INSERT INTO addresses (id_city, street_number, street_name) VALUES (@id_city, @street_number, @street_name) RETURNING id_address",
                 connection);
 
-            command.Parameters.AddWithValue("@id_city", nuevaDireccion.id_city);
-            command.Parameters.AddWithValue("@street_number", nuevaDireccion.street_number);
-            command.Parameters.AddWithValue("@street_name", nuevaDireccion.street_name);
+            insertCmd.Parameters.AddWithValue("@id_city", nuevaDireccion.id_city);
+            insertCmd.Parameters.AddWithValue("@street_number", nuevaDireccion.street_number);
+            insertCmd.Parameters.AddWithValue("@street_name", nuevaDireccion.street_name);
 
-            var result = command.ExecuteScalar();
-            if (result != null && int.TryParse(result.ToString(), out int id))
+            var insertedId = insertCmd.ExecuteScalar();
+            if (insertedId != null && int.TryParse(insertedId.ToString(), out int newId))
             {
-                return id;
+                return newId;
             }
 
             throw new Exception("No se pudo insertar la dirección.");

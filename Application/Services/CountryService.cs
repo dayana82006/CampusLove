@@ -89,9 +89,6 @@ namespace CampusLove.Application.Services
             return _repo.GetById(id);
         }
 
-        public static implicit operator CountryService(UserService v)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

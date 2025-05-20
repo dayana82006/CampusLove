@@ -86,22 +86,58 @@ public class PgsqlCitiesRepository : ICitiesRepository
 
     IEnumerable<Country> IGenericRepository<Country>.GetAll()
     {
-        throw new NotImplementedException();
+        using var conn = new NpgsqlConnection(_connStr);
+        conn.Open();
+        using var cmd = new NpgsqlCommand("SELECT * FROM countries", conn);
+        using var reader = cmd.ExecuteReader();
+        var countries = new List<Country>();
+        while (reader.Read())
+        {
+            var country = new Country
+            {
+                id_country = reader.GetInt32(0),
+                country_name = reader.GetString(1)
+            };
+            countries.Add(country);
+        }
+        return countries;
     }
 
     Country? IGenericRepository<Country>.GetById(int id)
     {
-        throw new NotImplementedException();
+        using var conn = new NpgsqlConnection(_connStr);
+        conn.Open();
+        using var cmd = new NpgsqlCommand("SELECT * FROM countries WHERE id_country = @id_country", conn);
+        cmd.Parameters.AddWithValue("id_country", id);
+        using var reader = cmd.ExecuteReader();
+        if (reader.Read())
+        {
+            return new Country
+            {
+                id_country = reader.GetInt32(0),
+                country_name = reader.GetString(1)
+            };
+        }
+        return null;
     }
 
     public void Create(Country entity)
     {
-        throw new NotImplementedException();
+        using var conn = new NpgsqlConnection(_connStr);
+        conn.Open();
+        using var cmd = new NpgsqlCommand("INSERT INTO countries (country_name) VALUES (@country_name)", conn);
+        cmd.Parameters.AddWithValue("country_name", entity.country_name);
+        cmd.ExecuteNonQuery();
     }
 
     public void Update(Country entity)
     {
-        throw new NotImplementedException();
+        using var conn = new NpgsqlConnection(_connStr);
+        conn.Open();
+        using var cmd = new NpgsqlCommand("UPDATE countries SET country_name = @country_name WHERE id_country = @id_country", conn);
+        cmd.Parameters.AddWithValue("id_country", entity.id_country);
+        cmd.Parameters.AddWithValue("country_name", entity.country_name);
+        cmd.ExecuteNonQuery();
     }
 
 }

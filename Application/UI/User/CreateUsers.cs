@@ -13,8 +13,8 @@ namespace CampusLove.Application.UI.User
         private readonly AddressesService _addressService;
         private readonly InterestsService _interestsService;
         private readonly UsersInterestsService _usersInterestsService;
-        private UserService userService;
 
+        // ✅ Constructor unificado: inicializa todos los servicios necesarios
         public CreateUser(UserService servicio, GendersService genderService, CareersService careerService,
                          AddressesService addressService, InterestsService interestsService,
                          UsersInterestsService usersInterestsService)
@@ -25,14 +25,6 @@ namespace CampusLove.Application.UI.User
             _addressService = addressService;
             _interestsService = interestsService;
             _usersInterestsService = usersInterestsService;
-        }
-
-        public CreateUser(UserService userService, GendersService genderService, CareersService careerService, AddressesService addressService)
-        {
-            this.userService = userService;
-            _genderService = genderService;
-            _careerService = careerService;
-            _addressService = addressService;
         }
 
         public void Ejecutar()
@@ -53,7 +45,6 @@ namespace CampusLove.Application.UI.User
             }
 
             CapturarPerfil(usuarioCreado);
-
             Console.WriteLine("\n✅ Usuario creado con éxito.");
         }
 
@@ -65,7 +56,7 @@ namespace CampusLove.Application.UI.User
             user.first_name = Console.ReadLine()?.Trim() ?? string.Empty;
             while (string.IsNullOrWhiteSpace(user.first_name) || ContieneNumeros(user.first_name))
             {
-                Console.Write("❌ Nombre inválido (no debe contener números). Ingrese nuevamente: ");
+                Console.Write("❌ Nombre inválido. Ingrese nuevamente: ");
                 user.first_name = Console.ReadLine()?.Trim() ?? string.Empty;
             }
 
@@ -73,7 +64,7 @@ namespace CampusLove.Application.UI.User
             user.last_name = Console.ReadLine()?.Trim() ?? string.Empty;
             while (string.IsNullOrWhiteSpace(user.last_name) || ContieneNumeros(user.last_name))
             {
-                Console.Write("❌ Apellido inválido (no debe contener números). Ingrese nuevamente: ");
+                Console.Write("❌ Apellido inválido. Ingrese nuevamente: ");
                 user.last_name = Console.ReadLine()?.Trim() ?? string.Empty;
             }
 
@@ -82,11 +73,7 @@ namespace CampusLove.Application.UI.User
             var (valido, mensaje) = EsEmailValido(user.email);
             while (!valido || _servicio.ExisteEmail(user.email))
             {
-                if (!valido)
-                    Console.WriteLine($" {mensaje}");
-                else
-                    Console.WriteLine(" El email ya está registrado. Intente con otro.");
-
+                Console.WriteLine(!valido ? $" {mensaje}" : " El email ya está registrado.");
                 Console.Write("Ingrese un nuevo email: ");
                 user.email = Console.ReadLine()?.Trim() ?? string.Empty;
                 (valido, mensaje) = EsEmailValido(user.email);
@@ -260,9 +247,7 @@ namespace CampusLove.Application.UI.User
 
                 Console.WriteLine("Seleccione un interés:");
                 for (int idx = 0; idx < intereses.Count; idx++)
-                {
                     Console.WriteLine($"{idx + 1}. {intereses[idx].interest_name}");
-                }
 
                 int opcionInterest;
                 while (true)
@@ -270,9 +255,7 @@ namespace CampusLove.Application.UI.User
                     Console.Write("Opción: ");
                     if (int.TryParse(Console.ReadLine(), out opcionInterest)
                         && opcionInterest >= 1 && opcionInterest <= intereses.Count)
-                    {
                         break;
-                    }
                     Console.WriteLine(" Opción inválida.");
                 }
 
@@ -280,7 +263,7 @@ namespace CampusLove.Application.UI.User
 
                 if (_usersInterestsService.TieneInteres(user.id_user, id_interest))
                 {
-                    Console.WriteLine("⚠️ Ya tienes este interés asociado. Intenta con otro.");
+                    Console.WriteLine("⚠️ Ya tienes este interés asociado.");
                 }
                 else
                 {
@@ -300,9 +283,7 @@ namespace CampusLove.Application.UI.User
                 agregarOtro = respuesta == "s";
 
                 if (!agregarOtro)
-                {
                     Console.Clear();
-                }
             }
         }
 
@@ -326,7 +307,7 @@ namespace CampusLove.Application.UI.User
             if (!email.Contains("@"))
                 return (false, "El email debe contener '@'.");
             if (!email.Contains("."))
-                return (false, "El email debe contener al menos un punto '.'.");
+                return (false, "El email debe contener un punto '.'.");
 
             return (true, string.Empty);
         }

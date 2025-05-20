@@ -241,11 +241,6 @@ namespace CampusLove.Infrastructure.Repositories
 
             return null;
         }
-
-        IEnumerable<Country> IAddressesRepository.GetAllCountries()
-        {
-            throw new NotImplementedException();
-        }
         public void Update(Addresses address)
 {
     using var connection = new NpgsqlConnection(_connectionString);
@@ -278,7 +273,18 @@ public void Delete(int id)
 
         void IGenericRepository<Addresses>.Create(Addresses entity)
         {
-            throw new NotImplementedException();
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            var command = new NpgsqlCommand(
+                "INSERT INTO addresses (id_city, street_number, street_name) VALUES (@idCity, @streetNumber, @streetName) RETURNING id_address", connection);
+
+            command.Parameters.AddWithValue("@idCity", entity.id_city);
+            command.Parameters.AddWithValue("@streetNumber", entity.street_number ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@streetName", entity.street_name ?? (object)DBNull.Value);
+
+            var newId = (int)command.ExecuteScalar();
+            entity.id_address = newId;
         }
     }
 }

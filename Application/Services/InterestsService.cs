@@ -9,11 +9,17 @@ public class InterestsService
 {
     private readonly IInterestsRepository _repository;
     private readonly ICategoryRepository _categoryRepository;
+    private IInterestsRepository interestsRepository;
 
     public InterestsService(IInterestsRepository repository, ICategoryRepository categoryRepository)
     {
         _repository = repository;
         _categoryRepository = categoryRepository;
+    }
+
+    public InterestsService(IInterestsRepository interestsRepository)
+    {
+        this.interestsRepository = interestsRepository;
     }
 
     public void Create(Interests interests)
