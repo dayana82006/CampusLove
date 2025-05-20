@@ -105,3 +105,4 @@ C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\bin\Debug\net8.0\runt
 C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
 C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Windows.Extensions.dll
+C:\Users\Dayana\OneDrive\Documentos\CampusJ1\C#\CampusLove\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll

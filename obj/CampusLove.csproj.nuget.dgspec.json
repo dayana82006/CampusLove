@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[2.1.66, )"
             },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
             "MySql.Data": {
               "target": "Package",
               "version": "[9.3.0, )"

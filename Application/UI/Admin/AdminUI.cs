@@ -6,6 +6,7 @@ using CampusLove.Application.UI.Admin.Users;
 using CampusLove.Domain.Interfaces;
 using CampusLove.Application.UI.Admin.Interest;
 using CampusLove.Application.UI.Admin.Gender;
+using CampusLove.Application.UI.Admin.Adress;
 
 namespace CampusLove.Application.UI
 {
@@ -58,16 +59,17 @@ namespace CampusLove.Application.UI
                     case 2:
                         var uiCareer = new UICareer(_factory);
                         uiCareer.GestionarCareers();
-                        
+
                         break;
                     case 3:
                         var uiInterest = new UIInterest(_factory);
                         uiInterest.Ejecutar();
-                        
+
                         break;
                     case 4:
-                        Console.WriteLine("🚧 Opción en desarrollo. Pronto disponible.");
-                        Console.ReadKey();
+                        var addressService = new AddressesService(_factory.CreateAddressesRepository(), "cadena_de_conexion");
+                        var uiAddress = new UIAdress(addressService);
+                        uiAddress.ShowMenu();
                         break;
                     case 5:
                         var uiCity = new UICity(_factory);
