@@ -110,7 +110,7 @@ namespace CampusLove.Infrastructure.Repositories
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
-            var command = new NpgsqlCommand("SELECT id_country, name_country FROM countries WHERE id_country = @id", connection);
+            var command = new NpgsqlCommand("SELECT id_country, country_name FROM countries WHERE id_country = @id", connection);
             command.Parameters.AddWithValue("@id", id);
 
             using var reader = command.ExecuteReader();
@@ -151,7 +151,7 @@ namespace CampusLove.Infrastructure.Repositories
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
-            var command = new NpgsqlCommand("SELECT id_country, name_country FROM countries", connection);
+            var command = new NpgsqlCommand("SELECT id_country, country_name FROM countries", connection);
             using var reader = command.ExecuteReader();
 
             while (reader.Read())
