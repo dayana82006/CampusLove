@@ -1,8 +1,9 @@
 using CampusLove.Domain.Entities;
+using CampusLove.Domain.Ports;
 
 namespace CampusLove.Domain.Interfaces
 {
-    public interface IAddressesRepository
+    public interface IAddressesRepository : IGenericRepository<Addresses>
     {
         Addresses Create(Addresses newAddress);
         IEnumerable<Addresses> GetAll();

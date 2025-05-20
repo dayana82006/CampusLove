@@ -18,7 +18,7 @@ namespace CampusLove.Application.Services
             _connStr = connStr ?? throw new ArgumentNullException(nameof(connStr));
         }
 
-       public string GetFullAddress(int idAddress)
+        public string GetFullAddress(int idAddress)
         {
             var address = _repository.GetById(idAddress);
             if (address == null)
@@ -102,5 +102,13 @@ namespace CampusLove.Application.Services
 
             throw new Exception("No se pudo insertar la dirección.");
         }
+
+        public void Delete(int id)
+        {
+            if (id <= 0) throw new ArgumentException("El ID debe ser mayor a cero.");
+
+            _repository.Delete(id);
+        }
+
     }
 }

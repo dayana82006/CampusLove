@@ -64,9 +64,9 @@ internal class Program
                 userStatisticsService
             );
 
-            var messagesService = new MessagesService(messagesRepo); // ✅ Constructor flexible
+            var messagesService = new MessagesService(messagesRepo); 
             var matchesService = new MatchesService(matchesRepo, interactionsRepo, messagesService);
-            messagesService.SetMatchesService(matchesService); // ✅ Inyección posterior
+            messagesService.SetMatchesService(matchesService); 
 
 
             var loginUI = new LoginUI(

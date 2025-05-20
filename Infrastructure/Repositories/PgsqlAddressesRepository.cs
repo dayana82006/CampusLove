@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Npgsql;
 using CampusLove.Domain.Entities;
 using CampusLove.Domain.Interfaces;
+using CampusLove.Domain.Ports;
 
 namespace CampusLove.Infrastructure.Repositories 
 {
@@ -110,7 +111,7 @@ namespace CampusLove.Infrastructure.Repositories
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
-            var command = new NpgsqlCommand("SELECT id_country, name_country FROM countries WHERE id_country = @id", connection);
+            var command = new NpgsqlCommand("SELECT id_country, country_name FROM countries WHERE id_country = @id", connection);
             command.Parameters.AddWithValue("@id", id);
 
             using var reader = command.ExecuteReader();
@@ -151,7 +152,7 @@ namespace CampusLove.Infrastructure.Repositories
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
-            var command = new NpgsqlCommand("SELECT id_country, name_country FROM countries", connection);
+            var command = new NpgsqlCommand("SELECT id_country, country_name FROM countries", connection);
             using var reader = command.ExecuteReader();
 
             while (reader.Read())
@@ -242,6 +243,40 @@ namespace CampusLove.Infrastructure.Repositories
         }
 
         IEnumerable<Country> IAddressesRepository.GetAllCountries()
+        {
+            throw new NotImplementedException();
+        }
+        public void Update(Addresses address)
+{
+    using var connection = new NpgsqlConnection(_connectionString);
+    connection.Open();
+
+    var command = new NpgsqlCommand(
+        @"UPDATE addresses 
+          SET id_city = @idCity, 
+              street_number = @streetNumber, 
+              street_name = @streetName 
+          WHERE id_address = @id", connection);
+
+    command.Parameters.AddWithValue("@id", address.id_address);
+    command.Parameters.AddWithValue("@idCity", address.id_city);
+    command.Parameters.AddWithValue("@streetNumber", (object?)address.street_number ?? DBNull.Value);
+    command.Parameters.AddWithValue("@streetName", (object?)address.street_name ?? DBNull.Value);
+
+    command.ExecuteNonQuery();
+}
+public void Delete(int id)
+{
+    using var connection = new NpgsqlConnection(_connectionString);
+    connection.Open();
+
+    var command = new NpgsqlCommand("DELETE FROM addresses WHERE id_address = @id", connection);
+    command.Parameters.AddWithValue("@id", id);
+
+    command.ExecuteNonQuery();
+}
+
+        void IGenericRepository<Addresses>.Create(Addresses entity)
         {
             throw new NotImplementedException();
         }
