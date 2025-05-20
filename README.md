@@ -52,3 +52,4 @@ Se incluyen diagramas UML (clases, DER, modelos lógico/físico) que apoyan la d
     ![alt text](<ModeloFisico.png>)
 ---
 
+
